@@ -4,10 +4,9 @@
 
 `pose2sim_cli.py` fuehrt Pose2Sim-Schritte einschliesslich der TRC-Rotation aus einem einzigen Kommando aus. Standardmaessig laeuft die komplette Pose2Sim-Pipeline vom Verzeichnis der Datei aus (Projektwurzel = Skriptordner).
 
-### Voraussetzungen
+### Voraussetzung
 
 - Pose2Sim ist fuer das Projekt installiert und konfiguriert.
-- TRC-Dateien (fuer Rotation) liegen unter `pose-3d` neben dem Skript.
 
 ### Nutzung
 
