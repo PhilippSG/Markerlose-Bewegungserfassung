@@ -151,7 +151,7 @@ def main():
     if steps_to_run:
         run_pose2sim_steps(steps_to_run)
 
-    if args.rotate:
+    if args.rotate or len(steps_to_run) == len(POSE2SIM_PIPELINE):
         rotate_trc_files()
 
 
