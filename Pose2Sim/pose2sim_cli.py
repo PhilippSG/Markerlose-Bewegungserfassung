@@ -57,36 +57,103 @@ def fix_trc_file(file_path, angles):
         print(f"❌ Error processing {filename}: {e}")
 
 
-# === MAIN EXECUTION ===
-
-def main():
-    # 1. Define the directory containing 3D data
-    pose3d_dir = os.path.join(project_dir, "pose-3d")
-    
-    # 2. Find all relevant TRC files
-    # We look for files ending with 'filt_butterworth_LSTM.trc' 
-    # as these are usually the highest quality files for all detected persons.
+def rotate_trc_files():
+    pose3d_dir = os.path.join(PROJECT_DIR, "pose-3d")
     search_pattern = os.path.join(pose3d_dir, "*filt_butterworth_LSTM.trc")
     trc_files = glob.glob(search_pattern)
-    
+
     print(f"🔎 Found {len(trc_files)} TRC files to process in: {pose3d_dir}")
-    
     if len(trc_files) == 0:
         print("⚠️ No files found! Please check the path or file naming.")
         return
 
-    # 3. Loop through each file and apply rotation
     for trc_file in trc_files:
-        fix_trc_file(trc_file, rotation_angles)
-        
-    # 4. Re-run Kinematics
-    # Now that the TRC data is corrected, we generate the .mot files for OpenSim.
+        fix_trc_file(trc_file, ROTATION_ANGLES)
+
     print("\n🚀 All files rotated. Generating OpenSim motion files (.mot)...")
-    
-    # Note: Pose2Sim automatically processes all detected persons in the folder.
     Pose2Sim.kinematics()
-    
     print("🎉 Done! You can now load the .mot files for both persons in OpenSim.")
+
+
+POSE2SIM_PIPELINE = [
+    ("calibration", Pose2Sim.calibration),
+    ("poseEstimation", Pose2Sim.poseEstimation),
+    ("synchronization", Pose2Sim.synchronization),
+    ("personAssociation", Pose2Sim.personAssociation),
+    ("triangulation", Pose2Sim.triangulation),
+    ("filtering", Pose2Sim.filtering),
+    ("markerAugmentation", Pose2Sim.markerAugmentation),
+    ("kinematics", Pose2Sim.kinematics),
+]
+
+
+def run_pose2sim_steps(step_names):
+    for name, func in POSE2SIM_PIPELINE:
+        if name in step_names:
+            print(f"\n▶ Running {name} ...")
+            func()
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Pose2Sim pipeline helper and TRC rotation"
+    )
+    parser.add_argument(
+        "-a",
+        "--all",
+        action="store_true",
+        help="Run the full Pose2Sim pipeline (default when no flags are given)",
+    )
+    parser.add_argument("-c", "--calibration", action="store_true", help="Run calibration")
+    parser.add_argument("-p", "--pose", action="store_true", help="Run pose estimation")
+    parser.add_argument("-s", "--sync", action="store_true", help="Run synchronization")
+    parser.add_argument("-o", "--assoc", action="store_true", help="Run person association")
+    parser.add_argument(
+        "-t", "--triangulation", action="store_true", help="Run triangulation"
+    )
+    parser.add_argument("-f", "--filtering", action="store_true", help="Run filtering")
+    parser.add_argument(
+        "-m", "--marker", action="store_true", help="Run marker augmentation"
+    )
+    parser.add_argument(
+        "-k", "--kinematics", action="store_true", help="Run kinematics"
+    )
+    parser.add_argument(
+        "-r",
+        "--rotate",
+        action="store_true",
+        help="Rotate TRC files in pose-3d and regenerate .mot files",
+    )
+    return parser.parse_args()
+
+
+def selected_steps_from_args(args):
+    step_flags = [
+        (args.calibration, "calibration"),
+        (args.pose, "poseEstimation"),
+        (args.sync, "synchronization"),
+        (args.assoc, "personAssociation"),
+        (args.triangulation, "triangulation"),
+        (args.filtering, "filtering"),
+        (args.marker, "markerAugmentation"),
+        (args.kinematics, "kinematics"),
+    ]
+    any_step_flag = any(flag for flag, _ in step_flags)
+    if args.all or (not any_step_flag and not args.rotate):
+        return [name for name, _ in POSE2SIM_PIPELINE]
+    return [name for flag, name in step_flags if flag]
+
+
+def main():
+    args = parse_args()
+    steps_to_run = selected_steps_from_args(args)
+
+    if steps_to_run:
+        run_pose2sim_steps(steps_to_run)
+
+    if args.rotate:
+        rotate_trc_files()
+
 
 if __name__ == "__main__":
     main()
