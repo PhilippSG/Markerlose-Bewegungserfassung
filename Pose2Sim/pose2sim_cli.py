@@ -1,72 +1,61 @@
-import pandas as pd
-import numpy as np
-from scipy.spatial.transform import Rotation as R
-import os
+import argparse
 import glob
+import os
+import pandas as pd
+from scipy.spatial.transform import Rotation as R
 from Pose2Sim import Pose2Sim
 
 # ================= CONFIGURATION =================
+# Project directory path (resolved from this file's location)
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_DIR = SCRIPT_DIR
 
-# 1. Project directory path (resolved from this file's location)
-script_dir = os.path.dirname(os.path.abspath(__file__))
-project_dir = script_dir
-
-# 2. Rotation angles [X, Y, Z] in degrees
-# Since both people were recorded with the same cameras, 
-# they share the same coordinate system and need the SAME rotation.
-# - Use [180, 0, 0] if they are "upside down/head in ground".
-# - Use [-90, 0, 0] if they are "lying on their backs".
-rotation_angles = [180, 180, 0] 
-
+# Rotation angles [X, Y, Z] in degrees
+# - Use [180, 0, 0] if subjects are upside down
+# - Use [-90, 0, 0] if subjects are lying on their backs
+ROTATION_ANGLES = [180, 180, 0]
 # =================================================
 
+
 def fix_trc_file(file_path, angles):
-    """
-    Reads a TRC file, applies a 3D rotation, and overwrites the file.
-    """
+    """Reads a TRC file, applies a 3D rotation, and overwrites the file."""
     filename = os.path.basename(file_path)
     print(f"🔄 Processing file: {filename}")
-    
+
     try:
-        # 1. Read the header (First 5 lines contain metadata)
-        with open(file_path, 'r') as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             header = [f.readline() for _ in range(5)]
-        
-        # 2. Read the data (Skip the first 5 lines)
-        df = pd.read_csv(file_path, sep='\t', skiprows=5, header=None)
-        
-        # 3. Separate metadata and coordinates
-        # Columns 0 and 1 are Frame# and Time
-        meta_cols = df.iloc[:, :2] 
-        # Columns 2 onwards are X, Y, Z coordinates
+
+        df = pd.read_csv(file_path, sep="\t", skiprows=5, header=None)
+
+        meta_cols = df.iloc[:, :2]
         coords = df.iloc[:, 2:].values
-        
-        # 4. Apply Rotation
-        r = R.from_euler('xyz', angles, degrees=True)
-        
-        # Reshape to (N, 3) for matrix multiplication
+
+        r = R.from_euler("xyz", angles, degrees=True)
+
         n_rows, n_cols = coords.shape
         flat_coords = coords.reshape(-1, 3)
-        
-        # Rotate
         rotated_coords = r.apply(flat_coords)
-        
-        # Reshape back to original dimensions
         rotated_data = pd.DataFrame(rotated_coords.reshape(n_rows, n_cols))
-        
-        # 5. Overwrite the file
-        # Write header first
-        with open(file_path, 'w') as f:
+
+        with open(file_path, "w", encoding="utf-8") as f:
             f.writelines(header)
-        
-        # Append data
+
         final_df = pd.concat([meta_cols, rotated_data], axis=1)
-        final_df.to_csv(file_path, sep='\t', mode='a', header=False, index=False, float_format='%.4f')
-        
+        final_df.to_csv(
+            file_path,
+            sep="\t",
+            mode="a",
+            header=False,
+            index=False,
+            float_format="%.4f",
+        )
+
         print(f"✅ Successfully rotated: {filename}")
-        
-    except Exception as e:
+
+    except Exception as e:  # noqa: BLE001
         print(f"❌ Error processing {filename}: {e}")
+
 
 # === MAIN EXECUTION ===
 
