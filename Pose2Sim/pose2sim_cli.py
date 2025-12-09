@@ -84,6 +84,7 @@ POSE2SIM_PIPELINE = [
     ("filtering", Pose2Sim.filtering),
     ("markerAugmentation", Pose2Sim.markerAugmentation),
     ("kinematics", Pose2Sim.kinematics),
+    ("rotate", rotate_trc_files),
 ]
 
 
@@ -125,6 +126,7 @@ def parse_args():
         help="Rotate TRC files in pose-3d and regenerate .mot files",
     )
     return parser.parse_args()
+    
 
 
 def selected_steps_from_args(args):
@@ -150,9 +152,6 @@ def main():
 
     if steps_to_run:
         run_pose2sim_steps(steps_to_run)
-
-    if args.rotate or len(steps_to_run) == len(POSE2SIM_PIPELINE):
-        rotate_trc_files()
 
 
 if __name__ == "__main__":
