@@ -2,7 +2,7 @@
 
 ## Pose2Sim CLI Helper (Deutsch)
 
-`pose2sim_cli.py` fuehrt Pose2Sim-Schritte und optional die TRC-Rotation aus einem einzigen Kommando aus. Standardmaessig laeuft die komplette Pose2Sim-Pipeline vom Verzeichnis der Datei aus (Projektwurzel = Skriptordner).
+`pose2sim_cli.py` fuehrt Pose2Sim-Schritte einschliesslich der TRC-Rotation aus einem einzigen Kommando aus. Standardmaessig laeuft die komplette Pose2Sim-Pipeline vom Verzeichnis der Datei aus (Projektwurzel = Skriptordner).
 
 ### Voraussetzungen
 
@@ -13,10 +13,10 @@
 
 Im Ordner mit `pose2sim_cli.py` ausfuehren:
 
-- Gesamte Pipeline (Standard):
+- **Gesamte Pipeline inklusive Rotation (Standard):**
   - `python pose2sim_cli.py`
   - `python pose2sim_cli.py -a`
-- Einzelne Schritte:
+- **Einzelne Schritte:**
   - Calibration: `python pose2sim_cli.py -c`
   - Pose Estimation: `python pose2sim_cli.py -p`
   - Synchronization: `python pose2sim_cli.py -s`
@@ -25,16 +25,16 @@ Im Ordner mit `pose2sim_cli.py` ausfuehren:
   - Filtering: `python pose2sim_cli.py -f`
   - Marker Augmentation: `python pose2sim_cli.py -m`
   - Kinematics: `python pose2sim_cli.py -k`
-- TRC-Dateien rotieren und `.mot` neu erzeugen: `python pose2sim_cli.py -r`
-- Flags kombinieren, z. B. `python pose2sim_cli.py -f -k -r`.
+  - TRC-Rotation: `python pose2sim_cli.py -r`
+- **Flags kombinieren:** z. B. `python pose2sim_cli.py -f -k -r` (laedt Filtering, Kinematics und Rotation aus)
 
-Ohne Flags laeuft die gesamte Pose2Sim-Pipeline. `-r` betrifft nur TRC-Rotation und `.mot`-Erzeugung und kann mit anderen Flags kombiniert werden.
+**Wichtig:** Ohne Flags laeuft die **gesamte Pipeline inklusive Rotation**. Einzelne Flags ermoglichen es, nur spezifische Schritte auszufuehren (auch Rotation kann einzeln mit `-r` aufgerufen werden).
 
 ---
 
 ## Pose2Sim CLI Helper (English)
 
-`pose2sim_cli.py` lets you run Pose2Sim stages and optional TRC rotation from one command-line tool. By default it runs the full Pose2Sim pipeline from the script's folder, assuming the project root is the same directory as the script.
+`pose2sim_cli.py` lets you run the full Pose2Sim pipeline including TRC rotation from one command-line tool. By default it runs the complete pipeline from the script's folder, assuming the project root is the same directory as the script.
 
 ### Prerequisites
 
@@ -45,10 +45,10 @@ Ohne Flags laeuft die gesamte Pose2Sim-Pipeline. `-r` betrifft nur TRC-Rotation 
 
 From the directory containing `pose2sim_cli.py`:
 
-- Full pipeline (default):
+- **Full pipeline including rotation (default):**
   - `python pose2sim_cli.py`
   - `python pose2sim_cli.py -a`
-- Individual stages:
+- **Individual stages:**
   - Calibration: `python pose2sim_cli.py -c`
   - Pose estimation: `python pose2sim_cli.py -p`
   - Synchronization: `python pose2sim_cli.py -s`
@@ -57,7 +57,7 @@ From the directory containing `pose2sim_cli.py`:
   - Filtering: `python pose2sim_cli.py -f`
   - Marker augmentation: `python pose2sim_cli.py -m`
   - Kinematics: `python pose2sim_cli.py -k`
-- Rotate TRC files and regenerate `.mot`: `python pose2sim_cli.py -r`
-- Combine flags to chain steps, e.g. `python pose2sim_cli.py -f -k -r`.
+  - TRC rotation: `python pose2sim_cli.py -r`
+- **Combine flags to chain steps:** e.g. `python pose2sim_cli.py -f -k -r` (runs filtering, kinematics, and rotation)
 
-If no flags are provided, the full Pose2Sim pipeline runs. `-r` only affects TRC rotation and `.mot` regeneration and can be combined with other flags.
+**Important:** If no flags are provided, the **full pipeline including rotation** runs. Individual flags allow you to run only specific steps (rotation can also be called alone with `-r`).
