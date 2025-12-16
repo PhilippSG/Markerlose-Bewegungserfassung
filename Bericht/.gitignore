@@ -1,0 +1,39 @@
+# --- LaTeX Core ---
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.dvi
+*.ps
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+*.pdf
+
+# --- Bibliographie (BibTeX / Biber) ---
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+
+# --- Glossare & Indizes ---
+*.glg
+*.glo
+*.gls
+*.ist
+*.acn
+*.acr
+*.alg
+*.idx
+*.ind
+*.ilg
+
+# --- Editor & OS Spezifisches ---
+.vscode/
+.DS_Store
+Thumbs.db
+*.swp
+*~
