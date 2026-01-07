@@ -67,6 +67,35 @@ limb_groups = [
 Bei der Skalierung wird für jedes Tupel der zweite Marker an den ersten angepasst, daher ist die Reihenfolge hier entscheidend.
 Nach der Verschiebung eines Markers wird ein Verschiebungsvektor aufaddiert, welcher vor der Skalierung des nächsten
 Körperteils auch auf den zweiten Marker des Tupels angewendet wird, um die Winkel beizubehalten.
+
+Wenn der entsprechende Parameter in der \texttt{scale} Funktion gesetzt ist, werden die
+zu skalierenden Längen einmal vor (Fig. \ref{fig:unscaled_plot}) und nach (Fig. \ref{fig:scaled_plot}) der Skalierung in einem Diagramm dargestellt, um die Skalierung zu überprüfen.
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+        \includegraphics[width=\textwidth]{img/lengths_before_scaling_s.png}
+        \caption{Längen vor Skalierung}
+        \label{fig:unscaled_plot}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\textwidth}
+        \includegraphics[width=\textwidth]{img/lengths_after_scaling_s.png}
+        \caption{Längen nach Skalierung}
+        \label{fig:scaled_plot}
+    \end{subfigure}
+
+    \begin{subfigure}{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/scaling_legend.png}
+        \label{fig:scaled_legend}
+    \end{subfigure}
+
+    \caption{Skalierungs Diagramme}
+\end{figure}
+
+Sind nach der Skalierung noch Abweichungen in den Längen der Körperteile vorhanden, so liegt wahrscheinlich ein
+Fehler in der Definition der \texttt{limb\_groups} vor.
+
 \subsection{Erstellen einer Tracer(.trc) Datei aus den Daten in der CSV Datei}
 \subsection{Verwendung der Tracer Datei um die virtuellen Marker als experimentelle Marker in OpenSim anzeigen zu lassen}
 \subsection{Anwendung auf ein Modell in OpenSim}
