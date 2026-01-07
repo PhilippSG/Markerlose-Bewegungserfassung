@@ -78,6 +78,29 @@ Die Funktion benötigt vier Übergabevariablen um das Video anzuzeigen:
     \item \verb|mp_pose|: Die von MediaPipe erstellte Posen-Schätzung
     \item \verb|display_marker_names|: Flag Variable, um das Video mit benannten Markern zu erstellen. Standardmäßig aus.
 \end{enumerate}
+\begin{figure}[ht]
+    \centering
+    % Erstes Unter-Bild
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{videoframe.png}
+        \caption{Ohne Marker-Namen}
+        \label{fig:frame_no_names}
+    \end{subfigure}
+    \hfill % Fügt flexiblen Platz zwischen den Bildern ein
+    % Zweites Unter-Bild
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{videoframe_names.png}
+        \caption{Mit Marker-Namen}
+        \label{fig:frame_with_names}
+    \end{subfigure}
+    
+    % Gemeinsame Haupt-Beschriftung
+    \caption{Vergleich der Video-Ausgabe aus dem MediaPipe Workflow}
+    \label{fig:video_comparison}
+\end{figure}
+\newpage
 \subsection{Erstellen einer CSV mit MediaPipe Daten aus einem brauchbaren Video}
 Als nächstes haben wir die Daten aus MediaPipe in eine CSV geschrieben um mit dieser dann weiterzuarbeiten.
 \begin{lstlisting}[language=Python,caption={Funktion welche die MediaPipe Daten in eine CSV Datei schreibt}]
@@ -147,7 +170,6 @@ def pose_estimation(video, landmark_map, video_folder, output_folder, rotate_vid
     pose.close()
     print("Pose estimation complete and output file successfully created: " + csv_path)
 \end{lstlisting}
-\newpage
 Als Ausgabe erhält man dann eine CSV Datei mit folgenden Informationen welche für die Tracer Datei später wichtig sind.
 Die generierte CSV-Datei folgt einer strikten Struktur, die dynamisch anhand der definierten Marker-Liste erstellt wird. 
 \begin{itemize}
@@ -164,6 +186,7 @@ Frame,Marker1_X,Marker1_Y,Marker1_Z,Marker2_X,Marker2_Y,Marker2_Z
 2,0.13,-0.54,0.81,0.46,-0.31,0.13
 ...
 \end{lstlisting}
+\newpage
 \subsection{Skalierung der MediaPipe Daten}
 Da MediaPipe die erkannten 3D-Koordinaten in einem normierten Raum zurückgibt, müssen diese Koordinaten
 skaliert werden, um sie in OpenSim verwenden zu können. Dabei geht es hauptsächlich darum, die Längen
