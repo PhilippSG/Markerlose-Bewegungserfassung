@@ -1,7 +1,22 @@
 \chapter{Hauptteil}
 \section{Ablauf bei der Verwendung von MediaPipe}
-Im folgenden wird unserer Workflow beschrieben, den wir verwendet haben um mit MediaPipe zum Ziel zu kommen.
-\subsection{Importierung der Biblioteken}
+Im folgenden wird unserer Workflow beschrieben, den wir verwendet haben um mit MediaPipe zum Ziel zu kommen. 
+\subsection{Importierung der Bibliotheken}
+Es werden folgende Versionen der Module für die Verwendung mit Python verwendet:
+\begin{itemize}
+    \item csv (kommt mit python) 3.12.12 \newline
+    Standard-Modul zum Schreiben von Textdateien im "Comma Separated Values" - Format.
+    \item math (kommt mit python) 3.12.12 \newline
+    Standard-Mathematik-Bibliothek von Python.
+    \item cv2 4.12.0.88 (opencv-python) \newline
+    Bibliothek für Computer Vision. Ist Notwendig zum lesen der Video Dateien und weiteren Bearbeitung. 
+    \item MediaPipe 0.10.21 \newline
+    Machine-Learning-Bibliotheken von Google. Wichtig für die Pose Schätzung.
+    \item pandas 2.3.3 \newline
+    Modul für die Datenanalyse und Tabellenkalkulation. Wichtig für die Umwandlung von CSV in TRC Datei.
+    \item numpy 1.26.4 \newline
+    Standardbibliothek für mathematische Berechnungen mit Vektoren und Matrizen. Wichtig für die Skalierung.
+\end{itemize}
 \subsection{Anzeigen der Videos}
 \subsection{Erstellen einer CSV mit MediaPipe Daten aus einem brauchbaren Video}
 \subsection{Skalierung der MediaPipe Daten}
