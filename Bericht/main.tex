@@ -9,23 +9,37 @@
 %\input{titel\deckblatt.tex}
 \makeTheTitlepage{
     organization={FH Aachen},
-    title={Markerlose Bewegungserfassung und deren Anwendung in OpenSim},
+    title={Markerlose Bewegungserfassung mit Anwendung in OpenSim},
     type={Interdisziplinäres Projekt},
     faculty={Faculty of Electrical Engineering and Computer Science},
-    %department={},
-    author={Potter, Harry and Granger, Hermione},
+    author={
+        \begin{tabular}{ll} % ll = zwei linksbündige Spalten
+            Schulte-Glade, Philipp & Stock, Maximilian \\
+            Tulus, Isabelle        & Chu, Wenkai \\
+            Bahrouni, Alaeddin     & Mölleken, Adrian
+        \end{tabular}
+    },
     place=Aachen,
     date=\today,
     examiner={Kolditz, Melanie, Prof. Dr.-Ing},
-    %secondExaminer={Werle, Markus, Dipl.-Ing}
 }
 % Inhaltsverzeichnis
 \tableofcontents
 \newpage
 % Kapitel laden
-\include{kapitel/Einleitung.tex}
-\include{kapitel/Hauptteil.tex}
-\include{kapitel/Schluss.tex}
+
+\include{einleitung/e1.tex}
+\include{einleitung/e2.tex}
+\include{einleitung/e3.tex}
+
+
+\include{hauptteil/h1.tex}
+\include{hauptteil/h2.tex}
+
+
+\include{schluss/s1.tex}
+\include{schluss/s2.tex}
+
 
 
 \end{document}
