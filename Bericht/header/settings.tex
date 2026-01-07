@@ -33,3 +33,42 @@
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{microtype}
+
+%Code in LaTeX darstellen
+\usepackage{listings}
+\usepackage{xcolor}
+
+% --- Farben definieren (VS Code Light Theme) ---
+\definecolor{vsBlue}{RGB}{0, 0, 255}          % Keywords (def, import, return)
+\definecolor{vsGreen}{RGB}{0, 128, 0}         % Kommentare
+\definecolor{vsRed}{RGB}{163, 21, 21}         % Strings ("...")
+\definecolor{vsPurple}{RGB}{175, 0, 219}      % Built-ins oder Zahlen (optional)
+\definecolor{vsGray}{RGB}{128, 128, 128}      % Zeilennummern
+\definecolor{vsBack}{RGB}{250, 250, 250}      % Leichter Grauschleier als Hintergrund
+
+% --- Style Definition ---
+\lstdefinestyle{vscode}{
+    backgroundcolor=\color{vsBack},   
+    commentstyle=\color{vsGreen},
+    keywordstyle=\color{vsBlue}\bfseries, % Keywords fett und blau
+    numberstyle=\tiny\color{vsGray},
+    stringstyle=\color{vsRed},
+    basicstyle=\ttfamily\footnotesize, % Schriftart: Typewriter, etwas kleiner
+    breakatwhitespace=false,         
+    breaklines=true,                 % Zeilenumbruch aktivieren
+    captionpos=b,                    % Beschriftung unten
+    keepspaces=true,                 
+    numbers=left,                    % Zeilennummern links
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=4,                       % Tabulator-Breite
+    frame=single,                    % Rahmen um den Code
+    rulecolor=\color{lightgray},     % Rahmenfarbe
+    language=Python,                 % Sprache festlegen
+    morekeywords={self, as},         % Fehlende Keywords manuell ergänzen
+}
+
+% --- Style aktivieren ---
+\lstset{style=vscode}
