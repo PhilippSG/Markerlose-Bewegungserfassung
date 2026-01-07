@@ -20,8 +20,64 @@ Es werden folgende Versionen der Module für die Verwendung mit Python verwendet
 \subsection{Anzeigen der Videos}
 Wir haben eine Funktion erstellt mit der unsere Videos, mit den eingezeichneten Skeletten von MediaPipe, angezeigt werden.
 \begin{lstlisting}[language=Python, caption= Funktion zum Abspielen der Videos]
+def play_video(video_path, rotate_video_by_degrees, mp_pose, display_marker_names=False):
+    """Displays the video with markers from MediaPipe, but without their names."""
+    cap = cv2.VideoCapture(video_path)
 
+    pose = create_pose(mp_pose)
+    
+    mp_drawing = mp.solutions.drawing_utils
+
+    while cap.isOpened():
+        success, frame = cap.read()
+            
+        if not success:
+            break
+
+        if (rotate_video_by_degrees != 0):
+            if (rotate_video_by_degrees == 90):
+                frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+            elif(rotate_video_by_degrees == 180):
+                frame = cv2.rotate(frame, cv2.ROTATE_180)
+            elif(rotate_video_by_degrees == 270):
+                frame = cv2.rotate(frame, cv2.ROTATE_270)     
+            
+        # BGR -> RGB
+        image_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        results = pose.process(image_rgb)
+
+        if results.pose_landmarks:
+            mp_drawing.draw_landmarks(
+                frame,
+                results.pose_landmarks,
+                mp_pose.POSE_CONNECTIONS,
+                mp_drawing.DrawingSpec(color=(0, 255, 0), thickness=2, circle_radius=2),
+                mp_drawing.DrawingSpec(color=(255, 0, 0), thickness=2)
+            )
+
+        if (display_marker_names):
+            h, w, _ = frame.shape
+            for idx, landmark in enumerate(results.pose_landmarks.landmark):
+                cx, cy = int(landmark.x * w), int(landmark.y * h)
+                name = mp_pose.PoseLandmark(idx).name
+                cv2.putText(frame, name, (cx + 5, cy - 5),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 255, 255), 1, cv2.LINE_AA)
+
+        cv2.imshow("Video", frame)
+
+        if cv2.waitKey(5) & 0xFF == ord('q'):
+            break
+    
+    cap.release()
+    cv2.destroyAllWindows()
 \end{lstlisting}
+Die Funktion benötigt vier Übergabevariablen um das Video anzuzeigen:
+\begin{enumerate}
+    \item \verb|videopath|: Der Pfad zum Video
+    \item \verb|rotate_video_by_degrees|: Die Gradzahl, um die das Video beim Anzeigen rotiert wird.
+    \item \verb|mp_pose|: Die von MediaPipe erstellte Posen-Schätzung
+    \item \verb|display_marker_names|: Flag Variable, um das Video mit benannten Markern zu erstellen. Standardmäßig aus.
+\end{enumerate}
 \subsection{Erstellen einer CSV mit MediaPipe Daten aus einem brauchbaren Video}
 \subsection{Skalierung der MediaPipe Daten}
 Da MediaPipe die erkannten 3D-Koordinaten in einem normierten Raum zurückgibt, müssen diese Koordinaten

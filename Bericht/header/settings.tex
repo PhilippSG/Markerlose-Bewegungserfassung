@@ -34,34 +34,41 @@
 \usepackage{lmodern}
 \usepackage{microtype}
 
-%Code in LaTeX Datei darstellen
+%Code in LaTeX darstellen
 \usepackage{listings}
 \usepackage{xcolor}
 
-% Farben definieren
-\definecolor{codegreen}{rgb}{0,0.6,0}
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}
-\definecolor{codepurple}{rgb}{0.58,0,0.82}
-\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+% --- Farben definieren (VS Code Light Theme) ---
+\definecolor{vsBlue}{RGB}{0, 0, 255}          % Keywords (def, import, return)
+\definecolor{vsGreen}{RGB}{0, 128, 0}         % Kommentare
+\definecolor{vsRed}{RGB}{163, 21, 21}         % Strings ("...")
+\definecolor{vsPurple}{RGB}{175, 0, 219}      % Built-ins oder Zahlen (optional)
+\definecolor{vsGray}{RGB}{128, 128, 128}      % Zeilennummern
+\definecolor{vsBack}{RGB}{250, 250, 250}      % Leichter Grauschleier als Hintergrund
 
-% Code-Style konfigurieren
-\lstdefinestyle{mystyle}{
-    backgroundcolor=\color{backcolour},   
-    commentstyle=\color{codegreen},
-    keywordstyle=\color{magenta},
-    numberstyle=\tiny\color{codegray},
-    stringstyle=\color{codepurple},
-    basicstyle=\ttfamily\footnotesize,
+% --- Style Definition ---
+\lstdefinestyle{vscode}{
+    backgroundcolor=\color{vsBack},   
+    commentstyle=\color{vsGreen},
+    keywordstyle=\color{vsBlue}\bfseries, % Keywords fett und blau
+    numberstyle=\tiny\color{vsGray},
+    stringstyle=\color{vsRed},
+    basicstyle=\ttfamily\footnotesize, % Schriftart: Typewriter, etwas kleiner
     breakatwhitespace=false,         
-    breaklines=true,                 
-    captionpos=b,                    
+    breaklines=true,                 % Zeilenumbruch aktivieren
+    captionpos=b,                    % Beschriftung unten
     keepspaces=true,                 
-    numbers=left,                    
+    numbers=left,                    % Zeilennummern links
     numbersep=5pt,                  
     showspaces=false,                
     showstringspaces=false,
     showtabs=false,                  
-    tabsize=2
+    tabsize=4,                       % Tabulator-Breite
+    frame=single,                    % Rahmen um den Code
+    rulecolor=\color{lightgray},     % Rahmenfarbe
+    language=Python,                 % Sprache festlegen
+    morekeywords={self, as},         % Fehlende Keywords manuell ergänzen
 }
 
-\lstset{style=mystyle}
+% --- Style aktivieren ---
+\lstset{style=vscode}
