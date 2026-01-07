@@ -1,3 +1,4 @@
+% !TEX root = ../main.tex
 \definecolor{fh-mint}{RGB}{0,177,172}
 \def\hlmint{\fontfamily{lmss}\fontsize{19pt}{19pt}\fontseries{b}\color{fh-mint}\selectfont}
 \def\hlAbold{\fontfamily{lmss}\fontsize{14pt}{30pt}\fontseries{b}\selectfont}
@@ -29,7 +30,6 @@
     place  .tl_set:N  = \l__titlepage_place_tl,
     date .tl_set:N  = \l__titlepage_date_tl,
     examiner .tl_set:N  = \l__titlepage_examiner_tl,
-    secondExaminer .tl_set:N  = \l__titlepage_second_examiner_tl,
 }
 
 \NewDocumentCommand { \makeTheTitlepage } { +m }
@@ -73,7 +73,6 @@
             \par
             \begin{tabularx}{\textwidth}{ X  X  }
                 Examiner:        & \l__titlepage_examiner_tl        \\[1em]
-                Second~Examiner: & \l__titlepage_second_examiner_tl \\
             \end{tabularx}
         \end{center}
 
