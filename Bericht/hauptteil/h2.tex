@@ -1,2 +1,65 @@
 \section{Ablauf bei der Verwendung von Pose2Sim}
-Test
+Im folgenden wird der Workflow bei der Verwendung von Pose2Sim beschrieben.
+
+\subsection{Systemvoraussetzungen}
+Für die Verwendung von Pose2Sim werden folgende Systemvoraussetzungen benötigt:
+\begin{itemize}
+    \item \textbf{Hardware:} Ein Computer mit ausreichend Speicher und Rechenleistung.
+    \item \textbf{Software:} Python, Miniconda oder Anaconda.
+    \item \textbf{Abhängigkeiten:} Verschiedene Python-Module und Bibliotheken.
+\end{itemize}
+
+\subsection{Installation von Pose2Sim}
+Die Installation von Pose2Sim erfolgt über Miniconda oder Anaconda. Nach der Installation sollte die Installation getestet werden. Typische Installationsprobleme und deren Lösungen werden in der offiziellen Dokumentation beschrieben.
+
+\subsection{Erstellen eines OpenSim Modells mit Pose2Sim}
+\subsubsection{Ordnerstruktur}
+Bei der Verwendung von Pose2Sim ist eine spezifische Ordnerstruktur erforderlich.
+
+\subsubsection{Kamera Setup}
+Das Kamera Setup ist ein wichtiger Bestandteil des Workflows. Hier können verschiedene Fehlerquellen auftreten.
+
+\subsubsection{Kalibrierung der Kameras}
+Die Kameras müssen sowohl intrinsisch als auch extrinsisch kalibriert werden.
+
+\subsubsection{Konfigurationsdatei}
+Die Konfigurationsdatei definiert wichtige Parameter des Pose2Sim Workflows. Der Aufbau und der Zweck dieser Datei werden hier erläutert.
+
+\subsubsection{Software und Plugins}
+Für die synchronisierte Aufnahme werden spezielle Software-Tools und Plugins benötigt.
+
+\subsubsection{2D Pose Erkennung}
+Die 2D Pose Erkennung ist der erste Schritt im Workflow.
+
+\subsubsection{3D Modell}
+Aus den 2D Daten wird ein 3D Modell erstellt.
+
+\subsubsection{TRC Datei Erstellung}
+Die 3D Daten werden in eine TRC Datei konvertiert.
+
+\subsubsection{Integration in OpenSim}
+Die TRC Datei kann nun in OpenSim integriert werden. Typische Fehlerquellen werden hier aufgezeigt.
+
+\subsection{Visualisierung und Qualitätscheck}
+Vor der Verwendung in OpenSim sollte eine Visualisierung und ein Qualitätscheck durchgeführt werden. Hierbei können Hardware Limitierungen zutage treten.
+
+\subsection{Zusätzliche Skripte}
+Es stehen Skripte zur Verfügung für:
+\begin{itemize}
+    \item Winkelkorrektur
+    \item Steuerung
+\end{itemize}
+
+\subsection{Einfluss unterschiedlicher Aufnahmeszenarien}
+Die Robustheit und Ergebnisqualität werden durch verschiedene Aufnahmeszenarien beeinflusst:
+\begin{itemize}
+    \item Einzelpersonen-Aufnahme vs. Multi-Personen-Aufnahmen
+    \item Helle vs. dunkle Kleidung
+    \item Enge vs. weite Kleidung
+    \item Gute vs. schlechte Belichtung
+    \item Große vs. kleinere Personen
+\end{itemize}
+
+\subsection{Fazit}
+Abschließend werden die Grenzen und die Anwendbarkeit von Pose2Sim bewertet. Weitere Informationen finden sich auf der GitHub-Seite des Projekts.
+
