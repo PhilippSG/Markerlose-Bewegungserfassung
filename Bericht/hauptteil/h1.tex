@@ -44,8 +44,8 @@ Dafür haben wir zwei unterschiedliche OpenSim Modelle  verwendet:
 Für dieses Ziel sind vier wesentliche Schritte notwendig:
 \begin{enumerate}
     \item Erhalten der Daten aus einem Video mithilfe von MediaPipe BlazePose
-    \item Erstellen einer Marker Datei für OpenSim
     \item Skalierung 
+    \item Erstellen einer Marker Datei für OpenSim
     \item Inverse Kinematik
 \end{enumerate}
 Das Ergebnis des Inversen Kinematik Tools von OpenSim ist dann eine Bewegungs Datei (.mot).
@@ -78,7 +78,7 @@ Es folgt nun ein Beispiel Frame von der Ausgabe der Funktion.
 \begin{figure}[ht]
     \centering
     % Erstes Unter-Bild
-    \begin{subfigure}[b]{0.45\textwidth}
+    \begin{subfigure}[bx]{0.45\textwidth}
         \centering
         \includegraphics[width=\textwidth]{videoframe.png}
         \caption{Ohne Marker-Namen}
@@ -86,7 +86,7 @@ Es folgt nun ein Beispiel Frame von der Ausgabe der Funktion.
     \end{subfigure}
     \hfill % Fügt flexiblen Platz zwischen den Bildern ein
     % Zweites Unter-Bild
-    \begin{subfigure}[b]{0.45\textwidth}
+    \begin{subfigure}[bx]{0.45\textwidth}
         \centering
         \includegraphics[width=\textwidth]{videoframe_names.png}
         \caption{Mit Marker-Namen}
@@ -99,7 +99,10 @@ Es folgt nun ein Beispiel Frame von der Ausgabe der Funktion.
 \end{figure}
 \newpage
 \subsection{CSV aus MediaPipe Daten}
-Als nächstes haben wir die Daten aus MediaPipe in eine CSV geschrieben um mit dieser dann weiterzuarbeiten.
+Eine Funktion bekommt dann jeweils die x-,y- und z- Koordinaten eines Keypoints von MediaPipe BlazePose und schreibt sie im CSV Format
+mit den jeweils zugehörigen Frames und der dementsprechenden Zeit in eine Datei.
+Die meisten Bildverarbeitungs-Bibliotheken, unter anderem auch MediaPipe BlazePose, haben den Ursprung oben links im Bild.
+Also wird die y-Achse einmal invertiert, sodass das Modell nachher nicht auf dem Kopf steht.
 
 Als Ausgabe erhält man dann eine CSV Datei mit Positions Informationen welche für die Marker Datei später wichtig sind.
 Die generierte CSV-Datei folgt einer strikten Struktur, die dynamisch anhand der definierten Marker-Liste erstellt wird. 
@@ -194,7 +197,42 @@ zu skalierenden Längen einmal vor (Fig. \ref{fig:unscaled_plot}) und nach (Fig.
 
 Sind nach der Skalierung noch Abweichungen in den Längen der Körperteile vorhanden, so liegt wahrscheinlich ein
 Fehler in der Definition der \texttt{limb\_groups} vor.
-
+\newpage
 \subsection{Marker Datei aus CSV}
+Ein weitere Funktion in unserem Workflow erstellt aus den Positionsdaten in der CSV Datei nun eine Marker Datei,
+welche wir in OpenSim verwenden können. Wichtig dabei ist dass unsere drei verwendeten Keypoints aus Mediapipe BlazePose
+auch den gleichen Namen haben wie die Marker in dem Modell von OpenSim.
+
+\begin{table}[ht]
+    \centering
+    \caption{Struktur der .trc Datei (Beispielwerte)}
+    \label{tab:trc_structure}
+    \scriptsize % Schriftgröße anpassen
+    \begin{tabular}{l l l l l l l l}
+        \hline
+        \textbf{Frame\#} & \textbf{Time} & \multicolumn{3}{c}{\textbf{r\_shoulder}} & \multicolumn{3}{c}{\textbf{r\_ellbow}} \\
+         & & X1 & Y1 & Z1 & X2 & Y2 & Z2 \\
+        \hline
+        1 & 0.0000 & -0.0032 & 0.8362 & 0.1700 & -0.0601 & 0.8085 & 0.1700 \\
+        2 & 0.0167 & -0.0016 & 0.8358 & 0.1700 & -0.0595 & 0.8103 & 0.1700 \\
+        3 & 0.0333 & -0.0009 & 0.8358 & 0.1700 & -0.0591 & 0.8109 & 0.1700 \\
+        ... & & & & & & & \\
+        \hline
+    \end{tabular}
+\end{table}
+\newpage
 \subsection{Verwendung von Marker Datei in OpenSim}
-\subsection{Anwendung auf ein Modell in OpenSim}
+Anschließend wird diese Marker Datei dann in OpenSim verwendet. Dabei unterscheiden wir die Marker Dateien
+in zwei Kategorien.
+\begin{itemize}
+    \item Statisch:
+    Die Person im Video hat eine Pose eingenommen und diese gehalten.
+    \item Dynamisch:
+    Die Person im Video hat eine Bewegung ausgeführt.
+\end{itemize}
+Die Statische Marker Datei ist vorallem für das Scale Tool von OpenSim wichtig.\cite{opensim_scale}
+Damit haben wir jedoch wenig Erfolg gehabt, da wir zu wenig Marker hatten um unser Modell korrekt zu skalieren.
+
+Jede Art von Marker Datei kann man in OpenSim darstellen unter "Preview experimental Data" um die Marker visualisiert im Raum zu sehen.
+Als letzten Schritt verwenden wir die Marker Dateien im Inversen Kinematik Tool \cite{opensim_ik} von OpenSim um eine .mot
+Bewegungsdatei zu bekommen welche die Gelenkwinkel des Modells beinhaltet.
