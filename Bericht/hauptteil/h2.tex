@@ -1,2 +1,94 @@
 \section{Ablauf bei der Verwendung von Pose2Sim}
-Test
+Im folgenden wird der Workflow bei der Verwendung von Pose2Sim beschrieben.
+
+\subsection{Systemvoraussetzungen}
+Für die Verwendung von Pose2Sim werden folgende Systemvoraussetzungen benötigt:
+\begin{itemize}
+    \item \textbf{Hardware:} Ein Computer mit ausreichend Speicher und Rechenleistung.
+    \item \textbf{Software:} Python, Miniconda oder Anaconda.
+    \item \textbf{Abhängigkeiten:} Verschiedene Python-Module und Bibliotheken.
+\end{itemize}
+
+\subsection{Installation von Pose2Sim}
+Die Installation von Pose2Sim erfolgt über Miniconda oder Anaconda. Nach der Installation sollte die Installation getestet werden. Typische Installationsprobleme und deren Lösungen werden in der offiziellen Dokumentation beschrieben.
+
+\subsection{Erstellen eines OpenSim Modells mit Pose2Sim}
+\subsubsection{Ordnerstruktur}
+Bei der Verwendung von Pose2Sim ist eine spezifische Ordnerstruktur erforderlich.
+
+\subsubsection{Kamera Setup}
+Das Kamera Setup ist ein wichtiger Bestandteil des Workflows. Hier können verschiedene Fehlerquellen auftreten.
+
+\subsubsection{Kalibrierung der Kameras}
+Die Kameras müssen sowohl intrinsisch als auch extrinsisch kalibriert werden.
+
+\subsubsection{Konfigurationsdatei}
+Die Konfigurationsdatei definiert wichtige Parameter des Pose2Sim Workflows. Der Aufbau und der Zweck dieser Datei werden hier erläutert.
+
+\subsubsection{Software und Plugins}
+Für die synchronisierte Aufnahme werden spezielle Software-Tools und Plugins benötigt.
+
+\subsubsection{2D Pose Erkennung}
+Die 2D Pose Erkennung ist der erste Schritt im Workflow.
+
+\subsubsection{3D Modell}
+Aus den 2D Daten wird ein 3D Modell erstellt.
+
+\subsubsection{TRC Datei Erstellung}
+Die 3D Daten werden in eine TRC Datei konvertiert.
+
+\subsubsection{Integration in OpenSim}
+Die TRC Datei kann nun in OpenSim integriert werden. Typische Fehlerquellen werden hier aufgezeigt.
+
+\paragraph{Synchronisieren mehrerer Modelle in OpenSim}
+Um mehrere Modelle und ihre Bewegungen synchron abzuspielen:
+\begin{enumerate}
+    \item Modelle und zugehörige Motion-Dateien in OpenSim laden.
+    \item Im linken Reiter die Option \enquote{coordinates} aller relevanten Modelle gleichzeitig markieren (Strg + Linksklick).
+    \item Rechtsklick auf eine der markierten Optionen und \enquote{Sync. Motions} wählen.
+\end{enumerate}
+
+\subsection{Visualisierung und Qualitätscheck}
+Vor der Verwendung in OpenSim sollte eine Visualisierung und ein Qualitätscheck durchgeführt werden. Hierbei können Hardware Limitierungen zutage treten.
+
+\subsection{Zusätzliche Skripte}
+Es stehen Skripte zur Verfügung für:
+\begin{itemize}
+    \item Winkelkorrektur
+    \item Steuerung
+\end{itemize}
+
+\subsection{Optimiertes Pose2Sim Skript}
+Eine optimierte Version des Pose2Sim Skripts steht bereit. Schritte zur Nutzung:
+\begin{enumerate}
+    \item \href{https://github.com/PhilippSG/Markerlose-Bewegungserfassung/tree/main/Pose2Sim}{Readme im Repository lesen} (Pose2Sim/readme.md).
+    \item Anleitung aus dem Readme befolgen und Skript ausführen.
+\end{enumerate}
+
+\subsection{Einfluss unterschiedlicher Aufnahmeszenarien}
+Die Robustheit und Ergebnisqualität werden durch verschiedene Aufnahmeszenarien beeinflusst:
+\begin{itemize}
+    \item Einzelpersonen-Aufnahme vs. Multi-Personen-Aufnahmen
+    \item Helle vs. dunkle Kleidung
+    \item Enge vs. weite Kleidung
+    \item Gute vs. schlechte Belichtung
+    \item Große vs. kleinere Personen
+\end{itemize}
+
+\subsection{Beobachtungen und Grenzen}
+\paragraph{Positive Beobachtungen}
+\begin{itemize}
+    \item Korrekte Abbildung von Größenunterschieden und Kopfformen.
+    \item Erkennung von visuellen Illusionen, wenn Personen im Hintergrund Gesten ausführen, die vordergründig wirken.
+\end{itemize}
+
+\paragraph{Fehlgeschlagene Experimente}
+\begin{itemize}
+    \item Experimente im Dunkeln mit dunkler Kleidung (Teleportation, schnelle oder langsame Kniebeugen) schlagen fehl; ausreichende Beleuchtung ist erforderlich.
+    \item Handheben mit heller Kleidung bei guter Beleuchtung funktioniert, erzeugt aber teils Rauschen.
+    \item Rollstuhl- oder Stuhlbewegungen führen zu ruckeligen Simulationen (Hüfte und Hände springen).
+\end{itemize}
+
+\subsection{Fazit}
+Abschließend werden die Grenzen und die Anwendbarkeit von Pose2Sim bewertet. Weitere Informationen finden sich auf der GitHub-Seite des Projekts.
+
