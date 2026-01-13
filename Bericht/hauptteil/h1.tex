@@ -1,7 +1,59 @@
 \chapter{Hauptteil}
+In diesem Kapitel werden zwei Ansätze zur markerlosen Pose-Erfassung
+untersucht und miteinander verglichen: zum einen einen eigenen Workflow mit MediaPipe als Ansatz zur
+2D- und 3D- Poseschätzung sowie zum anderen einen fertigen Open Source Workflow für OpenSim
+\cite{pose2sim} (mit Verwendung neuere Modelle wie RTM Pose) zur Rekonstruktion biomechanischer Modelle.
+Die Motivation für diesen Vergleich liegt darin begründet, dass beide Varianten im Kern 
+denselben algorithmischen Berechnungsschritten folgen, sich jedoch in ihrer systemseitigen Umsetzung unterscheiden. 
+Während Pose2Sim als integrierte Lösung fungiert, in der die gesamte Prozesskette bereits implementiert ist, 
+führt der in 2.1 betrachtete MediaPipe-Workflow die Einzelschritte sequenziell aus 
+und beschränkt sich dabei auf die Nutzung eines monokularen Kameraystems.
+
+Des Weiteren erfolgt ein Genauigkeitsvergleich, bei dem die Pose2Sim-Pipeline als Referenz dient, 
+um die Eignung des MediaPipe-Ansatzes für biomechanische Anwendungen zu bewerten. 
+Ergänzend wird die Robustheit der Pose2Sim-Pipeline gegenüber Störfaktoren wie Kleidung 
+oder unterschiedlichen Beleuchtungsbedingungen analysiert.
+\newpage
 \section{Ablauf bei der Verwendung von MediaPipe}
-Im folgenden wird unserer Workflow beschrieben, den wir verwendet haben um mit MediaPipe zum Ziel zu kommen. 
-\subsection{Importierung der Bibliotheken}
+Zu Beginn brauchen wir aus unseren 2D Daten, in Form eines Videos von unserer Kamera,
+geschätzte 3D-Koordinaten von markanten Punkten am Körper (Keypoints).
+Wir haben dabei das BlazePose Modell verwendet welches 31 Keypoints liefert.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{MediaPipe-pose-BlazePose-Topology.jpg}
+    \label{fig:BlazePose Topologie} 
+\end{figure}
+
+Fokussiert haben wir uns dabei erstmal auf drei Keypoints um eine bessere Übersicht zu behalten.
+\begin{itemize}
+    \item 11. rechte Schulter
+    \item 13. rechter Ellbogen
+    \item 15. rechtes Handgelenk
+\end{itemize}
+\newpage
+Unser Ziel ist es, diese drei Keypoints aus MediaPipe BlazePose auf ein Modell in OpenSim zu übersetzen
+und ,mithilfe des Inversen Kinematik Tools von OpenSim \cite{opensim_ik}, Gelenkwinkel von einer Bewegung herauszubekommen.
+Diese können wir dann mit den Gelenkwinkeln vom Pose2Sim Ansatz vergleichen.
+Dafür haben wir zwei unterschiedliche OpenSim Modelle  verwendet:
+
+\begin{itemize}
+    \item \texttt{arm26}\cite{opensim_models}-- Ein Standard Modell von OpenSim, welches sich nur auf den rechten Arm konzentriert.
+    \item \texttt{Model\_Pose2Sim\_muscles\_flex}\cite{pose2sim_setup} -- Ein Ganzkörper Modell von pose2sim für den besseren Vergleich.
+\end{itemize}
+
+Für dieses Ziel sind vier wesentliche Schritte notwendig:
+\begin{enumerate}
+    \item Erhalten der Daten aus einem Video mithilfe von MediaPipe BlazePose
+    \item Erstellen einer Marker Datei für OpenSim
+    \item Skalierung 
+    \item Inverse Kinematik
+\end{enumerate}
+Das Ergebnis des Inversen Kinematik Tools von OpenSim ist dann eine Bewegungs Datei (.mot).
+In dieser finden wir dann die Gelenkwinkel zu bestimmten Zeitpunkten.
+
+Nun folgt eine Beschreibung des Workflows. \newpage
+\subsection{Verwendete Bibliotheken}
+Für die weiterverarbeitung der Daten mit Python benötigen wir einige Module in unserem Workflow.
 Es werden folgende Versionen der Module für die Verwendung mit Python verwendet:
 \begin{itemize}
     \item csv (kommt mit python) 3.12.12 \newline
@@ -17,67 +69,12 @@ Es werden folgende Versionen der Module für die Verwendung mit Python verwendet
     \item numpy 1.26.4 \newline
     Standardbibliothek für mathematische Berechnungen mit Vektoren und Matrizen. Wichtig für die Skalierung.
 \end{itemize}
+\newpage
 \subsection{Anzeigen der Videos}
-Wir haben eine Funktion erstellt mit der unsere Videos, mit den eingezeichneten Skeletten von MediaPipe, angezeigt werden.
-\begin{lstlisting}[language=Python, caption= Funktion zum Abspielen der Videos]
-def play_video(video_path, rotate_video_by_degrees, mp_pose, display_marker_names=False):
-    """Displays the video with markers from MediaPipe, but without their names."""
-    cap = cv2.VideoCapture(video_path)
-
-    pose = create_pose(mp_pose)
-    
-    mp_drawing = mp.solutions.drawing_utils
-
-    while cap.isOpened():
-        success, frame = cap.read()
-            
-        if not success:
-            break
-
-        if (rotate_video_by_degrees != 0):
-            if (rotate_video_by_degrees == 90):
-                frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
-            elif(rotate_video_by_degrees == 180):
-                frame = cv2.rotate(frame, cv2.ROTATE_180)
-            elif(rotate_video_by_degrees == 270):
-                frame = cv2.rotate(frame, cv2.ROTATE_270)     
-            
-        # BGR -> RGB
-        image_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        results = pose.process(image_rgb)
-
-        if results.pose_landmarks:
-            mp_drawing.draw_landmarks(
-                frame,
-                results.pose_landmarks,
-                mp_pose.POSE_CONNECTIONS,
-                mp_drawing.DrawingSpec(color=(0, 255, 0), thickness=2, circle_radius=2),
-                mp_drawing.DrawingSpec(color=(255, 0, 0), thickness=2)
-            )
-
-        if (display_marker_names):
-            h, w, _ = frame.shape
-            for idx, landmark in enumerate(results.pose_landmarks.landmark):
-                cx, cy = int(landmark.x * w), int(landmark.y * h)
-                name = mp_pose.PoseLandmark(idx).name
-                cv2.putText(frame, name, (cx + 5, cy - 5),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 255, 255), 1, cv2.LINE_AA)
-
-        cv2.imshow("Video", frame)
-
-        if cv2.waitKey(5) & 0xFF == ord('q'):
-            break
-    
-    cap.release()
-    cv2.destroyAllWindows()
-\end{lstlisting}
-Die Funktion benötigt vier Übergabevariablen um das Video anzuzeigen:
-\begin{enumerate}
-    \item \verb|videopath|: Der Pfad zum Video
-    \item \verb|rotate_video_by_degrees|: Die Gradzahl, um die das Video beim Anzeigen rotiert wird.
-    \item \verb|mp_pose|: Die von MediaPipe erstellte Posen-Schätzung
-    \item \verb|display_marker_names|: Flag Variable, um das Video mit benannten Markern zu erstellen. Standardmäßig aus.
-\end{enumerate}
+Unsere erste Funktion gibt uns unsere aufgenommenen Videos mit eingezeichneten Skeletten wieder.
+Das ist für einen ersten Überblick interessant, um zu sehen ob MediaPipe Blaze Pose die Position der Keypoints
+richtig erkannt hat. Außerdem lässt sich schonmal feststellen wo Probleme bei der Erkennung aufkommen.
+Es folgt nun ein Beispiel Frame von der Ausgabe der Funktion.
 \begin{figure}[ht]
     \centering
     % Erstes Unter-Bild
@@ -101,76 +98,10 @@ Die Funktion benötigt vier Übergabevariablen um das Video anzuzeigen:
     \label{fig:video_comparison}
 \end{figure}
 \newpage
-\subsection{Erstellen einer CSV mit MediaPipe Daten aus einem brauchbaren Video}
+\subsection{CSV aus MediaPipe Daten}
 Als nächstes haben wir die Daten aus MediaPipe in eine CSV geschrieben um mit dieser dann weiterzuarbeiten.
-\begin{lstlisting}[language=Python,caption={Funktion welche die MediaPipe Daten in eine CSV Datei schreibt}]
-def pose_estimation(video, landmark_map, video_folder, output_folder, rotate_video_by_degrees, flip_x_axis, mp_pose):
-    """Runs the MediaPipe pose estimation on the video and extracts marker positions into a csv file."""
-    print("Running pose estimation...")
-    csv_path = output_folder + video + ".csv"
-    video_path = video_folder + video + ".mp4"
-    
-    cap = cv2.VideoCapture(video_path)
-    
-    pose = create_pose(mp_pose)
-    
-    # CSV-File
-    with open(csv_path, mode='w', newline='') as file:
-        writer = csv.writer(file)
-    
-        # Meta/FPS
-        writer.writerow(["#FPS", cap.get(cv2.CAP_PROP_FPS)])
-    
-        # Header: Frame + Marker X/Y/Z
-        header = ["Frame"]
-        
-        for name, mp_name in landmark_map.items():
-            header += [f"{name}_X", f"{name}_Y", f"{name}_Z"]
-        writer.writerow(header)
-    
-        frame_idx = 0
-    
-        while cap.isOpened():
-            success, frame = cap.read()
-            if not success:
-                break
-                
-            if (rotate_video_by_degrees != 0):
-                if (rotate_video_by_degrees == 90):
-                    frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
-                elif(rotate_video_by_degrees == 180):
-                    frame = cv2.rotate(frame, cv2.ROTATE_180)
-                elif(rotate_video_by_degrees == 270):
-                    frame = cv2.rotate(frame, cv2.ROTATE_270)
-                    
-            # BGR -> RGB
-            image_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            results = pose.process(image_rgb)
-    
-            row = [frame_idx]
-    
-            if results.pose_landmarks:
-                landmarks = results.pose_landmarks.landmark
-    
-                for name, mp_name in landmark_map.items():    
-                    lm = landmarks[mp_name]
-                    
-                    if (flip_x_axis):
-                        lm.x = -lm.x
-                    # invert y axis
-                    row += [lm.x, -lm.y, lm.z]
-    
-            else:
-                # if no landmark - fill with 0s
-                row += [0.0] * (len(landmark_map.items()) * 3)
-    
-            writer.writerow(row)
-            frame_idx += 1
-    cap.release()
-    pose.close()
-    print("Pose estimation complete and output file successfully created: " + csv_path)
-\end{lstlisting}
-Als Ausgabe erhält man dann eine CSV Datei mit folgenden Informationen welche für die Tracer Datei später wichtig sind.
+
+Als Ausgabe erhält man dann eine CSV Datei mit Positions Informationen welche für die Marker Datei später wichtig sind.
 Die generierte CSV-Datei folgt einer strikten Struktur, die dynamisch anhand der definierten Marker-Liste erstellt wird. 
 \begin{itemize}
     \item \textbf{Zeile 1:} Metadaten zur Framerate (FPS).
@@ -264,6 +195,6 @@ zu skalierenden Längen einmal vor (Fig. \ref{fig:unscaled_plot}) und nach (Fig.
 Sind nach der Skalierung noch Abweichungen in den Längen der Körperteile vorhanden, so liegt wahrscheinlich ein
 Fehler in der Definition der \texttt{limb\_groups} vor.
 
-\subsection{Erstellen einer Tracer(.trc) Datei aus den Daten in der CSV Datei}
-\subsection{Verwendung der Tracer Datei um die virtuellen Marker als experimentelle Marker in OpenSim anzeigen zu lassen}
+\subsection{Marker Datei aus CSV}
+\subsection{Verwendung von Marker Datei in OpenSim}
 \subsection{Anwendung auf ein Modell in OpenSim}
