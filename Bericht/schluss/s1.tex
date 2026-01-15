@@ -1,29 +1,2 @@
 \chapter{Schluss}
 \section{Fazit}
-\subsection{Genauigkeit der 3D-Pose-Schätzung von MediaPipe}
-Da dies ein monokularer Ansatz ist, sind die 3D Positionen von MediaPipe BlazePose
-nicht so genau wie bei einem Mehrkamerasystem. Um die Genauigkeit zu überprüfen, haben wir ein
-Beispielvideo verwendet
-(\href{https://github.com/PhilippSG/Markerlose-Bewegungserfassung/blob/main/Videos/video_comp.mp4}{siehe GitHub-Repository, Videos\//video\_comp.mp4}). Im Video ist eine nahezu perfekte 2D Bewegung in der sichtbaren x-y-Ebene zu sehen, um die Stabilität der
-3D Pose Schätzung zu testen. 
-
-Zunächst haben wir das Video mit MediaPipe analysiert,
-um die 3D Positionen der Keypoints zu extrahieren. Anschließend haben wir den Prozess wiederholt,
-aber diesmal die Z-Koordinaten aller Keypoints auf Null gesetzt, um eine 2D-Analyse zu simulieren.
-Danach haben wir die Ergebnisse in OpenSim importiert um sie zu betrachten.
-
-Im Ergebnisvideo (\href{https://github.com/PhilippSG/Markerlose-Bewegungserfassung/blob/main/Bericht/vids/MP_Comp_2D-3D.mp4}{siehe GitHub-Repository, MediaPipe\//Bericht\//vids\//MP\_Comp\_2D-3D.mp4}),
-so wie in der Abbildung~\ref{fig:2d-3d-vergleich}, ist deutlich zu erkennen, dass die 3D-Analyse von MediaPipe
-zu erheblichen Schwankungen in der Z-Achse führt, obwohl die Bewegung eigentlich in der x-y-Ebene stattfindet.
-
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.6\textwidth]{2D-3D_comp.png}
-    \caption{Vergleich der 2D-(links) und 3D-(rechts) Analyse in OpenSim}
-    \label{fig:2d-3d-vergleich} 
-\end{figure}
-
-Dies zeigt, dass die 3D Pose Schätzung von MediaPipe in diesem Fall nicht stabil genug ist, um präzise Bewegungsdaten zu liefern.
-Im Gegensatz dazu liefert die 2D-Analyse, bei der die Z-Koordinaten auf Null gesetzt wurden, eine viel stabilere und genauere Darstellung der Bewegung.
-Dies unterstreicht die Limitationen der 3D Pose Schätzung bei monokularen Systemen und legt nahe, dass für präzise biomechanische Analysen
-Mehrkamerasysteme oder andere fortschrittlichere Methoden erforderlich sind.
