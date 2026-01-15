@@ -1,12 +1,13 @@
-\chapter{Hauptteil}
+
+\section{Vergleich zweier Ansätze zur markerlosen Pose-Erfassung}
 In diesem Kapitel werden zwei Ansätze zur markerlosen Pose-Erfassung
-untersucht und miteinander verglichen: zum einen einen eigenen Workflow mit MediaPipe als Ansatz zur
-2D- und 3D- Poseschätzung sowie zum anderen einen fertigen Open Source Workflow für OpenSim
-\cite{pose2sim} (mit Verwendung neuere Modelle wie RTM Pose) zur Rekonstruktion biomechanischer Modelle.
+untersucht und miteinander verglichen: zum einen ein eigener Workflow mit MediaPipe als Ansatz zur
+2D- und 3D- Poseschätzung sowie zum anderen ein fertiger Open Source Workflow für OpenSim
+\cite{pose2sim} (mit Verwendung neuerer Modelle wie RTM Pose) zur Rekonstruktion biomechanischer Modelle.
 Die Motivation für diesen Vergleich liegt darin begründet, dass beide Varianten im Kern 
 denselben algorithmischen Berechnungsschritten folgen, sich jedoch in ihrer systemseitigen Umsetzung unterscheiden. 
 Während Pose2Sim als integrierte Lösung fungiert, in der die gesamte Prozesskette bereits implementiert ist, 
-führt der in 2.1 betrachtete MediaPipe-Workflow die Einzelschritte sequenziell aus 
+führt der in 2.4 betrachtete MediaPipe-Workflow die Einzelschritte sequenziell aus 
 und beschränkt sich dabei auf die Nutzung eines monokularen Kameraystems.
 
 Des Weiteren erfolgt ein Genauigkeitsvergleich, bei dem die Pose2Sim-Pipeline als Referenz dient, 
@@ -17,7 +18,7 @@ oder unterschiedlichen Beleuchtungsbedingungen analysiert.
 \section{Ablauf bei der Verwendung von MediaPipe}
 Zu Beginn brauchen wir aus unseren 2D Daten, in Form eines Videos von unserer Kamera,
 geschätzte 3D-Koordinaten von markanten Punkten am Körper (Keypoints).
-Wir haben dabei das BlazePose Modell verwendet welches 31 Keypoints liefert.
+Wir haben dabei das BlazePose Modell verwendet welches 33 Keypoints liefert.
 \begin{figure}[ht]
     \centering
     \includegraphics[width=\textwidth]{MediaPipe-pose-BlazePose-Topology.jpg}
@@ -52,10 +53,13 @@ Das Ergebnis des Inversen Kinematik Tools von OpenSim ist dann eine Bewegungs Da
 In dieser finden wir dann die Gelenkwinkel zu bestimmten Zeitpunkten.
 
 Nun folgt eine Beschreibung des Workflows. \newpage
-\subsection{Verwendete Bibliotheken}
-Für die weiterverarbeitung der Daten mit Python benötigen wir einige Module in unserem Workflow.
-Es werden folgende Versionen der Module für die Verwendung mit Python verwendet:
+\subsection{Softwareversionen und Module}
+Wir haben uns für die Programmiersprache Python entschieden, da es eine einfache und schnelle Möglichkeit bietet,
+um Bildverarbeitungs Bibliotheken zu verwenden. Außerdem ist Python sehr verbreitet in der
+Machine Learning Community, was die Verwendung von MediaPipe erleichtert.
+Es werden folgende Softwareversionen verwendet:
 \begin{itemize}
+    \item Python 3.12.12 
     \item csv (kommt mit python) 3.12.12 \newline
     Standard-Modul zum Schreiben von Textdateien im "Comma Separated Values" - Format.
     \item math (kommt mit python) 3.12.12 \newline
@@ -70,11 +74,24 @@ Es werden folgende Versionen der Module für die Verwendung mit Python verwendet
     Standardbibliothek für mathematische Berechnungen mit Vektoren und Matrizen. Wichtig für die Skalierung.
 \end{itemize}
 \newpage
-\subsection{Anzeigen der Videos}
+\subsection{Videos}
+Da das MediaPipe BlazePose Modell in unserem Workflow nur mit Videos arbeitet, brauchen wir als erstes
+ein Video von  \textbf{einer} Person. Für eine gute Aufnahme sollte folgendes beachtet werden:
+\begin{itemize}
+    \item Die Person sollte komplett im Bild sein.
+    \item Die Person sollte vom Hintergrund unterscheidbar sein.
+    \item Die Beleuchtung sollte ausreichend sein, damit die Kamera die Person gut erkennen kann.
+    \item Die Kamera sollte still stehen, damit keine Bewegungsunschärfe entsteht.
+\end{itemize}
+
 Unsere erste Funktion gibt uns unsere aufgenommenen Videos mit eingezeichneten Skeletten wieder.
 Das ist für einen ersten Überblick interessant, um zu sehen ob MediaPipe Blaze Pose die Position der Keypoints
 richtig erkannt hat. Außerdem lässt sich schonmal feststellen wo Probleme bei der Erkennung aufkommen.
-Es folgt nun ein Beispiel Frame von der Ausgabe der Funktion.
+Beim Aufruf der Anzeige Funktion kann über einen Parameter eingestellt werden, 
+ob die Marker Namen angezeigt werden (Abb. \ref{fig:frame_with_names}) oder nicht (Abb. \ref{fig:frame_no_names}).
+Zudem verfügt die Funktion über eine Flag-Variable, 
+um das Video bei Bedarf zu drehen, 
+falls es nicht in der korrekten Ausrichtung eingespeichert wurde.
 \begin{figure}[ht]
     \centering
     % Erstes Unter-Bild
@@ -199,7 +216,7 @@ Sind nach der Skalierung noch Abweichungen in den Längen der Körperteile vorha
 Fehler in der Definition der \texttt{limb\_groups} vor.
 \newpage
 \subsection{Marker Datei aus CSV}
-Ein weitere Funktion in unserem Workflow erstellt aus den Positionsdaten in der CSV Datei nun eine Marker Datei,
+Eine weitere Funktion in unserem Workflow erstellt aus den Positionsdaten in der CSV Datei nun eine Marker Datei,
 welche wir in OpenSim verwenden können. Wichtig dabei ist dass unsere drei verwendeten Keypoints aus Mediapipe BlazePose
 auch den gleichen Namen haben wie die Marker in dem Modell von OpenSim.
 

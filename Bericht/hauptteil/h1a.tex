@@ -1,0 +1,91 @@
+\chapter{Hauptteil}
+\section{Stand der Technik/Modelle für markerlose Bewegungserfassung}
+Der aktuelle Stand der Technik basiert überwiegend auf Verfahren der sogenannten Human Pose Estimation (HPE).
+Dabei werden anatomisch definierte Gelenkpunkte, also sogenannte Keypoints, direkt aus Bild- oder Videodaten geschätzt.
+Moderne Systeme nutzen hierfür überwiegend Deep-Learning-Modelle, insbesondere Convolutional Neural Networks (CNN),
+die Gelenkpositionen in Form probabilistischer Heatmaps vorhersagen. Diese Verfahren erreichen in der zweidimensionalen
+Pose-Schätzung inzwischen eine sehr hohe Genauigkeit und Robustheit gegenüber variierenden Hintergründen,
+Beleuchtungsverhältnissen und Körperformen.
+
+Die dreidimensionale markerlose Bewegungserfassung stellt weiterhin eine größere technische Herausforderung dar.
+Ein grundlegendes Problem besteht in der sogenannten Tiefenambiguität, da aus monokularen RGB-Aufnahmen keine
+eindeutige Tiefeninformation ableitbar ist. Aktuelle Forschungsansätze begegnen diesem Problem durch die Nutzung
+mehrerer synchronisierter Kameras, durch lernbasierte Rekonstruktion dreidimensionaler Posen aus großen annotierten
+Datensätzen oder durch zeitliche Modellierung ganzer Bewegungssequenzen. Insbesondere die Kombination räumlicher und
+zeitlicher Informationen hat sich als wesentlich für robuste 3D-Rekonstruktionen erwiesen.
+
+Neben rein monokularen Ansätzen kommen zunehmend Multi-View-Systeme zum Einsatz, bei denen mehrere Kameras aus
+unterschiedlichen Blickwinkeln verwendet werden. Durch geometrische Triangulation lassen sich dabei dreidimensionale
+Gelenkpositionen präziser bestimmen, insbesondere bei Bewegungen mit starker Selbstverdeckung. Diese Systeme erreichen
+in kontrollierten Umgebungen eine Genauigkeit, die in bestimmten Anwendungen bereits mit markerbasierten
+Motion-Capture-Systemen vergleichbar ist. Allerdings gehen sie mit höherem Hardware-, Kalibrierungs- und Rechenaufwand einher.
+
+Ein weiterer Entwicklungszweig des Stands der Technik sind hybride Verfahren, die visuelle RGB-Daten mit Tiefeninformationen
+aus Time-of-Flight- oder Stereo-Kameras kombinieren. Durch die explizite Messung der Entfernung zum Objekt kann die
+dreidimensionale Rekonstruktion stabilisiert und die Fehleranfälligkeit bei Abdeckung der Sicht reduziert werden. Solche
+Systeme finden insbesondere in der Rehabilitation, der ergonomischen Analyse und der Mensch-Maschine-Interaktion Anwendung.
+
+In den letzten Jahren hat sich zudem der Einsatz fortgeschrittener neuronaler Architekturen wie Graph-Neural-Networks und
+Transformer-Modelle etabliert. Diese ermöglichen eine explizite Modellierung der kinematischen Abhängigkeiten zwischen
+einzelnen Gelenken sowie der zeitlichen Dynamik von Bewegungen. Aktuelle Forschungsarbeiten untersuchen darüber hinaus den
+Einsatz generativer und diffusionsbasierter Modelle, um plausible 3D-Bewegungen auch bei unvollständigen oder verrauschten
+Eingangsdaten zu rekonstruieren.
+
+Trotz erheblicher Fortschritte bestehen weiterhin offene Herausforderungen. Dazu zählen die robuste Handhabung von Sichtabdeckung,
+die Übertragbarkeit auf neue Personen und Umgebungen sowie die biomechanische Genauigkeit der rekonstruierten Bewegungen.
+Insbesondere für Anwendungen, bei denen Gelenkmomente, Muskelkräfte oder Belastungen bestimmt werden sollen, ist die Kopplung
+markerloser Bewegungserfassung mit biomechanischen Modellen weiterhin Gegenstand aktueller Forschung.
+
+Zur Analyse und Simulation menschlicher Bewegungen existieren verschiedene etablierte Systeme digitaler Menschmodelle.
+Zu den bekanntesten zählen AnyBody, OpenSim, Santos, LifeMOD und Dynamicus.
+Ein zentraler Schwerpunkt der Arbeit liegt auf der Erstellung eines reproduzierbaren und praxisnahen Tutorials, das die
+vollständige Pipeline der markerlosen Bewegungserfassung beschreibt. Dieses Tutorial umfasst die Installation, Konfiguration
+und Anwendung von MediaPipe sowie von Pose2Sim in Kombination mit OpenSim, beginnend bei der Rohdatenerfassung über die
+Poseschätzung bis hin zur biomechanischen Auswertung. Durch eine schrittweise und systematische Darstellung soll der Einstieg
+für neue Anwender erleichtert und typische Fehlerquellen vermieden werden.
+
+\section{Was ist OpenSim?}
+OpenSim ist eine kostenlose Open Source Software Plattform für die Modellierung, Simulierung,
+Kontrollierung und Analyse für das Neuro-Muskel-Skelett-System von Menschen, Tieren und Robotern.
+Simuliert wird deren Interaktion und Bewegung in der Umgebung, in der sie sich befinden.
+
+\underline{Muskel-Skelett-Modelle}\newline
+OpenSim ermöglicht das Erstellen und Verändern von eigenen 3D-Modellen des menschlichen oder
+tierischen Bewegungsapparats, inklusive Knochen, Gelenken, Muskeln, Sehnen und anderer Strukturen.
+Das graphical user interface kurz GUI erlaubt es, die eigenen Modelle oder bereits vorhandene zu
+laden, Visualisierung und ihre Einstellungen im Detail zu bearbeiten.
+
+OpenSim’s Muskelmodelle erfassen die aktiven und passiven generierten Kraft Eigenschaften der
+Muskeln, die auf gut getesteten Modellen der Muskel Sehnen Dynamik aus der Literatur basieren.
+
+Die Softwareplattform kommt mit einer großen Anzahl an Muskels Skelett Modellen, die beim
+Herunterladen bereits zur Verfügung gestellt sind, bei denen es sich um Modelle des menschlichen
+Oberkörpers und der unteren Extremitäten handelt. Zusätzlich zu den Modellen, die in
+Forschungsqualität angeboten werden, gibt es weitere teilweise stark vereinfachte Modelle für
+die Erstellung von Prototypen und zum Lehren. Außerdem bietet OpenSim die Möglichkeit von Benutzern
+selbst erstellte Modelle aus einer Online Bibliothek zu laden.
+
+Zum Analysieren und Simulieren von Modellen und Bewegungen gibt es Tools, um Markerdaten,
+Gelenkkinematiken und externe Kräfte zu importieren und ebenfalls zu visualisieren. Einige Benutzer
+haben Toolboxen erstellt und geteilt, die mit verschiedenen gängigen Bewegungserfassungssystemen
+kompatibel sind.
+
+\underline{Tools}\newline
+Das Scale Tool erlaubt es Objektspezifisch Muskel Skelett Modelle basierend auf den experimentell
+erfassten Daten zu erstellen.
+
+Mit der statischen Optimierung kann das Muskel-Redundanzproblem gelöst werden, basierend auf
+etablierten Verfahren aus der wissenschaftlichen Literatur.
+
+Mit Hilfe des Computed Muscle Control (CMC)-Tool lassen sich muskelgetriebene Vorwärtssimulationen
+erzeugen. Diese Methode wurde erfolgreich für verschiedene Bewegungen wie das Gehen, Laufen,
+Radfahren, Springen und die Analyse pathologischer Gangmuster eingesetzt.
+
+OpenSim ermöglicht außerdem eine detaillierte Analyse („Probing“) von Modellen und Simulationen.
+Dabei können Größen wie Gelenkwinkel, Muskelkräfte, Muskelhebelarme, Muskelarbeit oder die Bewegung
+des Körperschwerpunkts untersucht und grafisch dargestellt werden.
+
+Zur Visualisierung bietet OpenSim eine grafische Benutzeroberfläche, in der nahezu alle
+Modellkomponenten angezeigt werden können. Externe Geometrien (z. B. STL- oder OBJ-Dateien)
+lassen sich importieren und mit integrierten Bild- und Video-Tools können anschauliche Darstellungen
+für Präsentationen und Publikationen erstellt werden.
