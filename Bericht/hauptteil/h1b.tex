@@ -116,10 +116,17 @@ falls es nicht in der korrekten Ausrichtung eingespeichert wurde.
 \end{figure}
 \newpage
 \subsection{CSV aus MediaPipe Daten}
-Eine Funktion bekommt dann jeweils die x-,y- und z- Koordinaten eines Keypoints von MediaPipe BlazePose und schreibt sie im CSV Format
-mit den jeweils zugehörigen Frames und der dementsprechenden Zeit in eine Datei.
+Die Funktion \texttt{pose\_estimation} ruft das MediaPipe BlazePose Modell auf dem Video auf
+und extrahiert die 3D Positionen der definierten Keypoints.
 Die meisten Bildverarbeitungs-Bibliotheken, unter anderem auch MediaPipe BlazePose, haben den Ursprung oben links im Bild.
 Also wird die y-Achse einmal invertiert, sodass das Modell nachher nicht auf dem Kopf steht.
+
+Eine Fehlerquelle ist hier, die Missachtung der Orientierung der Person zur Kamera im Vergleich
+zum OpenSim Modell. Dadurch kann es passieren, dass die Daten nach import in OpenSim nicht mit dem Modell
+übereinstimmen. Um dem entgegenzuwirken, gibt es die Möglichkeit das Video um festgelegte Winkel
+um die y-Achse zu rotieren. Rotiert wird dabei gegen den Uhrzeigersinn um die im Parameter \texttt{rotate\_around\_y\_axis}
+angegebene Gradzahl (0, 90, 180 oder 270). Dabei müssen die statische Aufnahme und die Bewegungsaufnahme
+gegebenfalls unterschiedlich rotiert werden, je nachdem wie die Person in der jeweiligen Aufnahme zur Kamera steht.
 
 Als Ausgabe erhält man dann eine CSV Datei mit Positions Informationen welche für die Marker Datei später wichtig sind.
 Die generierte CSV-Datei folgt einer strikten Struktur, die dynamisch anhand der definierten Marker-Liste erstellt wird. 
@@ -188,7 +195,7 @@ Nach der Verschiebung eines Markers wird ein Verschiebungsvektor aufaddiert, wel
 Körperteils auch auf den zweiten Marker des Tupels angewendet wird, um die Winkel beizubehalten.
 
 Wenn der entsprechende Parameter in der \texttt{scale} Funktion gesetzt ist, werden die
-zu skalierenden Längen einmal vor (Fig. \ref{fig:unscaled_plot}) und nach (Fig. \ref{fig:scaled_plot}) der Skalierung in einem Diagramm dargestellt, um die Skalierung zu überprüfen.
+zu skalierenden Längen einmal vor (Abb. \ref{fig:unscaled_plot}) und nach (Abb. \ref{fig:scaled_plot}) der Skalierung in einem Diagramm dargestellt, um die Skalierung zu überprüfen.
 \begin{figure}[htbp]
     \centering
     \begin{subfigure}{0.49\textwidth}
