@@ -1,18 +1,32 @@
 \section{Was ist markerlose Bewegungserfassung?}
 Ziel der Bewegungserfassung ist die realitätsnahe Abbildung des menschlichen Bewegungsapparats, um (menschliche) Bewegungen digital zu erfassen und auszuwerten. Die Bewegungserfassung kann dabei entweder markerbasiert oder markerlos erfolgen.
 
-Bei markerbasierten Verfahren werden retroreflektierende Marker an definierten anatomischen Landmarken einer Person angebracht und von mehreren Kameras erfasst. (https://www.mpg.de/417219/forschungsSchwerpunkt1 - Markerfreies Motion Capture: Neue Wege zur Analyse menschlicher Bewegungen) Alternativ können inertiale Messeinheiten (IMUs) eingesetzt werden, die Bewegungsdaten ohne optische Kamerasysteme erfassen, indem sie mehrere integrierte Sensoren kombinieren. Die gewonnenen Messdaten werden in beiden Fällen mithilfe spezieller Software verarbeitet und auf digitale Modelle übertragen. (https://www.mimicproductions.com/post/motion-capture-suits)
+Bei markerbasierten Verfahren werden retroreflektierende Marker 
+an definierten anatomischen Landmarken einer Person angebracht und von mehreren Kameras erfasst.
+\cite{mpg}
+Alternativ können inertiale Messeinheiten (IMUs) eingesetzt werden,
+die Bewegungsdaten ohne optische Kamerasysteme erfassen,
+indem sie mehrere integrierte Sensoren kombinieren. 
+Die gewonnenen Messdaten werden in beiden Fällen mithilfe spezieller Software verarbeitet und auf digitale Modelle übertragen.
+\cite{mimic_suits}
 
-Markerlose Bewegungserfassung verzichtet vollständig auf physische Markierungen am Körper und erfolgt ausschließlich bildbasiert. Bewegungen werden mithilfe von Kameras aufgezeichnet und softwaregestützt ausgewertet, wobei menschliche Körpersegmente und Gelenkpunkte durch Bildverarbeitungsverfahren identifiziert werden. Die ermittelten zweidimensionalen Positionsdaten werden im Anschluss mittels Triangulation dreidimensional rekonstruiert. (https://www.mpg.de/417219/forschungsSchwerpunkt1 - Markerfreies Motion Capture: Neue Wege zur Analyse menschlicher Bewegungen)
+Markerlose Bewegungserfassung verzichtet vollständig auf 
+physische Markierungen am Körper und erfolgt ausschließlich bildbasiert. 
+Bewegungen werden mithilfe von Kameras aufgezeichnet und softwaregestützt ausgewertet, 
+wobei menschliche Körpersegmente und Gelenkpunkte durch Bildverarbeitungsverfahren identifiziert werden. 
+Die ermittelten zweidimensionalen Positionsdaten werden im Anschluss mittels Triangulation dreidimensional rekonstruiert. 
+\cite{mpg}
 
-Markerlose Bewegungserfassung ermöglicht eine größere Flexibilität in der Anwendung, ist weniger zeit- und kostenintensiv und damit für den Alltagsgebrauch besser geeignet.  (https://www.mpg.de/417219/forschungsSchwerpunkt1 - Markerfreies Motion Capture: Neue Wege zur Analyse menschlicher Bewegungen) Im Vergleich zu markerbasierten Systemen ist sie jedoch mit einer geringeren Genauigkeit sowie einer höheren Latenz verbunden. (Homo Sapiens Digitalis – Virtuelle Ergonomie und digitale Menschmodelle, S. 275).
+Markerlose Bewegungserfassung ermöglicht eine größere Flexibilität in der Anwendung, 
+ist weniger zeit- und kostenintensiv und damit für den Alltagsgebrauch besser geeignet. \cite{mpg} 
+Im Vergleich zu markerbasierten Systemen ist sie jedoch mit einer geringeren Genauigkeit sowie einer höheren Latenz verbunden.
+\cite[S.~275]{homo_sapiens_digitalis}
 
-Die Einsatzgebiete der markerlosen Bewegungserfassung umfassen sowohl die Sportwissenschaften als auch die Medizin, insbesondere in den Bereichen Rehabilitation, Orthopädie und Ganganalyse (Webbasierte Anwendungen Virtueller Techniken, S. 86). Darüber hinaus findet sie Anwendung in der Film- und Spieleentwicklung, beispielsweise in der Animation virtueller Charaktere, sowie in der Robotik und der Mensch-Maschine-Interaktion. (https://www.mpg.de/417219/forschungsSchwerpunkt1 - Markerfreies Motion Capture: Neue Wege zur Analyse menschlicher Bewegungen)
+Die Einsatzgebiete der markerlosen Bewegungserfassung umfassen sowohl die Sportwissenschaften als auch die Medizin, 
+insbesondere in den Bereichen Rehabilitation, Orthopädie und Ganganalyse.\cite[S.~86]{web_vr_ar} 
+Darüber hinaus findet sie Anwendung in der Film- und Spieleentwicklung, beispielsweise in der Animation virtueller Charaktere, 
+sowie in der Robotik und der Mensch-Maschine-Interaktion. \cite{mpg}
 
-\newline
-(https://www.mpg.de/417219/forschungsSchwerpunkt1 -
-Markerfreies Motion Capture: Neue Wege zur Analyse menschlicher Bewegungen)
-\newline 
 % Quelle und Bild nur in Google Docs ("IP_Einleitung")
 % Bilddatei marker_vs_markerlos.png fehlt noch im Projektordner; Quelle im Quellenverzeichnis fehlt noch!
 
