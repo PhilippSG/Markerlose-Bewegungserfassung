@@ -18,6 +18,8 @@ Arm-Modell verwendet, welches auf 3 Markern basiert (Schulter, Ellbogen und Hand
 verwendete OpenSim Modell ist das im GitHub-Repository befindliche
 Markerlose-Bewegungserfassung\//OpenSim\//models\//arm\_modell.osim.
 
+Detailliertere Erklärungen zu den einzelnen Schritten finden Sie im Kapitel 2.4 des Hauptberichts.
+
 \subsection{Repository anlegen}
 Folgenden Befehl an gewünschter Stelle im Dateisystem ausführen:
 \begin{verbatim}
@@ -33,11 +35,13 @@ dynamische Aufnahme mit der gewünschten Bewegung. Genauere Anforderungen an die
 in der Sektion Videos beschrieben.
 
 Die Videos müssen unter dem Ordner Markerlose-Bewegungserfassung\//Videos abgelegt oder die Pfade
-im Code entsprechend angepasst werden.
+im Code entsprechend angepasst werden. 
 \subsection{Videos laden und anzeigen}
 Führen Sie das Jupyter Notebook \texttt{Workflow.ipynb} bis zur Zelle \texttt{Execute} aus.
 In der Zelle darunter finden sich die Variablen \texttt{static\_video\_name} und
 \texttt{dyn\_video\_name}. Setzen Sie diese auf die entsprechenden Videonamen (nur Dateiname, ohne Dateiendung).
+Die Dateiendung sollte mp4 sein, ansonsten muss diese in den Variablen \texttt{static\_video\_path} und
+\texttt{dyn\_video\_path} entsprechend angepasst werden.
 Führen Sie nun diese und die darauffolgende Zelle aus, um die Videos über OpenCV zu laden und
 anzuzeigen. Sollten die Videos nicht in der richtigen Ausrichtung abgespielt werden, so muss die
 Variable \texttt{rotate\_video\_by\_degrees} entsprechend angepasst werden. Rotiert wird dabei
@@ -57,26 +61,42 @@ Vor dem jeweiligen Aufruf der \texttt{pose\_estimation} Funktion findet sich die
 Variable \texttt{rotate\_around\_y\_axis}. Diese sorgt, wie der Name vermuten lässt,
 für eine Rotation der Daten um die y-Achse. Damit kann die Ausrichtung auf die Ausrichtung
 des OpenSim Modells angepasst werden, um sicherzustellen, dass die Marker auf die des Modells
-angepasst sind. Rotiert wird dabei im Gegenuhrzeigersinn.
+angepasst sind. Rotiert wird dabei gegen den Uhrzeigersinn.
 
 Die Standardausrichtung des OpenSim Modells entspricht einer Person,
 die im Video nach rechts schaut. Die Beispielvideos müssen also wie in Abbildung~\ref{fig:example_orientations}
 dargestellt rotiert werden.
-
 \begin{figure}[htbp]
     \centering
     \begin{subfigure}{0.44\textwidth}
         \includegraphics[width=\textwidth]{handouts/example_facing_cam.png}
-        \caption{\texttt{rotate\_around\_y\_axis = 90}}
+        \caption{\texttt{rotate\_around\_y\_axis=90}}
         \label{fig:rotate90}
     \end{subfigure}
     \hspace{0.5cm}
     \begin{subfigure}{0.35\textwidth}
         \includegraphics[width=\textwidth]{handouts/example_facing_right.png}
-        \caption{\texttt{rotate\_around\_y\_axis = 0}}
+        \caption{\texttt{rotate\_around\_y\_axis=0}}
         \label{fig:rotate0}
     \end{subfigure}
-    \caption{Beispiel Orientierungen mit nötiger Rotation}
+    \caption{Beispiel Orientierungen mit notwendiger Rotation}
     \label{fig:example_orientations}
 \end{figure}
+Das Ausführen dieser Zelle kann je nach Modellkomplexität und Dauer der
+Videos einige Minuten in Anspruch nehmen.
+\newpage
+\subsection{Skalierung}
+Anschließend müssen die Daten skaliert werden, um bessere Ergebnisse zu erreichen.
+Dafür müssen die Körperteile in Gruppen in dem Array \texttt{limb\_groups} übergeben werden.
+
+Zudem findet bei der Skalierung auch die Ursprungsverschiebung statt. Dafür muss ein Marker
+gewählt werden, nach dem sich diese Verschiebung orientiert. Tragen Sie den Namen dieses Markers
+in der Variable \texttt{anchor\_marker} ein und übergeben Sie die Position dieses Markers im
+OpenSim Modells in der Variable \texttt{anchor\_vector}.
+Schalten Sie die Ausgabe der Skalierungsdiagramme über den Parameter \texttt{plots}
+der \texttt{scale} Funktion ein, um die Skalierung kontrollieren zu können.
+
+\subsection{Formatierung zu .trc}
+Führen Sie zuletzt die letzte Zelle aus, um die bisher verwendeten .csv Dateien in .trc
+Dateien zu konvertieren, die dann in OpenSim geladen werden können.
 \end{document}
