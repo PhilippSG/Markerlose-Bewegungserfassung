@@ -136,6 +136,37 @@ falls es nicht in der korrekten Ausrichtung eingespeichert wurde.
     \label{fig:video_comparison}
 \end{figure}
 \newpage
+\subsection{MediaPipe Modell}
+Das verwendete Pose-Modell wird zu Beginn des Workflows in der Funktion
+\texttt{create\_pose} instanziiert. Diese Funktion ermöglicht es, zu jedem Start einer
+Pose-Schätzung ein neues Modell zu erzeugen, das noch nicht auf zuvor verarbeiteten
+Daten basiert. Dadurch wird sichergestellt, dass beim Wechsel von der statischen zur
+dynamischen Aufnahme kein zeitlicher Zusammenhang zwischen den beiden Sequenzen
+besteht. Insbesondere wird verhindert, dass die Marker ausgehend von der Endposition
+der statischen Aufnahme zur Startposition der dynamischen Bewegung interpoliert oder
+„wandern“, wodurch konsistente und unabhängige Initialbedingungen für beide Aufnahmen
+gewährleistet werden.
+
+In der folgenden Übersicht sind die für die Modellierung verwendeten Parameter aufgeführt.
+Diese Parameter bestimmen maßgeblich das Verhalten und die Genauigkeit des Modells.
+Im Folgenden werden daher die einzelnen Parameter mit den für die Ergebnisse dieser Arbeit
+verwendeten Werte dargestellt.
+\begin{itemize}
+    \item \texttt{\textbf{static\_image\_mode} (False)}: Gibt an, dass das Modell für Videosequenzen verwendet wird.
+    Dadurch werden erkannte Posen über mehrere Frames hinweg verfolgt, was die Stabilität erhöht
+    und die Rechenlast reduziert.
+    \item \texttt{\textbf{model\_complexity} (2)}: Bestimmt die Komplexität des verwendeten Pose-Modells.
+    Höhere Werte liefern in der Regel genauere Ergebnisse, benötigen jedoch mehr Rechenleistung.
+    \item \texttt{\textbf{enable\_segmentation} (False)}: Deaktiviert die Personensegmentierung im Bild. Da nur die
+    Körperlandmarks benötigt werden, wird auf diese zusätzliche Berechnung verzichtet.
+    \item \texttt{\textbf{min\_detection\_confidence} (0.5)}: Legt die minimale Konfidenz fest, ab der eine Pose
+    als erfolgreich erkannt gilt.
+    \item \texttt{\textbf{min\_tracking\_confidence} (0.5)}: Legt die minimale Konfidenz für das Tracking der Pose
+    zwischen aufeinanderfolgenden Frames fest.
+    \item \texttt{\textbf{smooth\_landmarks} (True)}: Aktiviert eine zeitliche Glättung der Landmark-Positionen über 
+    mehrere Frames.
+\end{itemize}
+\newpage
 \subsection{CSV aus MediaPipe Daten}
 Die Funktion \texttt{pose\_estimation} ruft das MediaPipe BlazePose Modell auf dem Video auf
 und extrahiert die 3D Positionen der definierten Keypoints.
@@ -175,7 +206,14 @@ MediaPipe Daten auf den Ursprung von OpenSim zu verschieben.
 Für die Ursprungsverschiebung muss ein Marker als Referenz gewählt und dessen Position in OpenSim als
 Referenzkoordinate übergeben werden. Dann wird die durchschnittliche Koordinate dieses Markers über die
 statische Aufnahme berechnet und der Differenzvektor zu der OpenSim Referenzkoordinate bestimmt. Dieser
-Vektor wird dann auf alle MediaPipe Koordinaten addiert, um den Ursprung zu verschieben.
+Vektor wird dann auf alle MediaPipe Koordinaten der statischen Aufnahme addiert, um den Ursprung zu verschieben.
+
+Bei der Bewegungsaufnahme wird hingegen ein abweichendes Vorgehen gewählt. Hier wird der
+Differenzvektor nicht aus der gemittelten statischen Aufnahme bestimmt, sondern aus der Position des
+Referenzmarkers im ersten Frame der Bewegung. Dieser Vektor dient als initiale Ursprungsverschiebung
+und wird auf alle nachfolgenden Frames angewendet. Auf diese Weise startet die Bewegung im Ursprung
+des OpenSim-Modells, während gleichzeitig eine Translation des Körpers im Raum über die Zeit erhalten
+bleibt.
 
 Die Skalierung der Körperteile kann auf verschiedene Arten erfolgen:
 \begin{itemize}
@@ -288,8 +326,7 @@ Bewegungsdatei zu bekommen welche die Gelenkwinkel des Modells, zu unterschiedli
 \subsection{Genauigkeit der 3D-Pose-Schätzung von MediaPipe}
 Da dies ein monokularer Ansatz ist, sind die 3D Positionen von MediaPipe BlazePose
 nicht so genau wie bei einem Mehrkamerasystem. Um die Genauigkeit zu überprüfen, haben wir ein
-Beispielvideo verwendet
-(\href{https://github.com/PhilippSG/Markerlose-Bewegungserfassung/blob/main/Videos/video_comp.mp4}{siehe GitHub-Repository, Videos\//video\_comp.mp4}). Im Video ist eine nahezu perfekte 2D Bewegung in der sichtbaren x-y-Ebene zu sehen, um die Stabilität der
+Beispielvideo\cite{mp_video_comp} (Video von cam1) verwendet. Im Video ist eine nahezu perfekte 2D Bewegung in der sichtbaren x-y-Ebene zu sehen, um die Stabilität der
 3D Pose Schätzung zu testen. 
 
 Zunächst haben wir das Video mit MediaPipe analysiert,
@@ -297,9 +334,8 @@ um die 3D Positionen der Keypoints zu extrahieren. Anschließend haben wir den P
 aber diesmal die Z-Koordinaten aller Keypoints auf Null gesetzt, um eine 2D-Analyse zu simulieren.
 Danach haben wir die Ergebnisse in OpenSim importiert um sie zu betrachten.
 
-Im Ergebnisvideo (\href{https://github.com/PhilippSG/Markerlose-Bewegungserfassung/blob/main/Bericht/vids/MP_Comp_2D-3D.mp4}{siehe GitHub-Repository, MediaPipe\//Bericht\//vids\//MP\_Comp\_2D-3D.mp4}),
-so wie in der Abbildung~\ref{fig:2d-3d-vergleich}, ist deutlich zu erkennen, dass die 3D-Analyse von MediaPipe
-zu erheblichen Schwankungen in der Z-Achse führt, obwohl die Bewegung eigentlich in der x-y-Ebene stattfindet.
+Im Ergebnisvideo\cite{mp_2d3d_video}, so wie in der Abbildung~\ref{fig:2d-3d-vergleich}, ist deutlich zu erkennen, dass die 3D-Analyse von MediaPipe
+zu erheblichen Schwankungen in der Z-Achse führt, obwohl die Bewegung nahezu ausschließlich in der x-y-Ebene auf der Höhe der Schulter stattfindet.
 
 \begin{figure}[ht]
     \centering

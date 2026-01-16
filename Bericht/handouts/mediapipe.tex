@@ -1,0 +1,82 @@
+%Einfügen der Header-Dateien
+\input{header/settings.tex}
+
+% Start des Dokuments
+\begin{document}
+\setcounter{chapter}{0}
+\renewcommand{\thesection}{\arabic{section}} % Sections nur arabisch nummerieren
+\newpage
+\begin{center}
+    {\LARGE \textbf{Handout: MediaPipe-Pipeline}}\\[0.5cm]
+\end{center}
+
+\section{Schritt-für-Schritt Anleitung}
+In diesem Handout wird die korrekte Verwendung der erstellten MediaPipe-Pipeline an einem
+Beispiel erläutert. Die verwendeten Videos finden sich unter dem Ordner
+Markerlose-Bewegungserfassung\//Videos\//MP\_2d3d\_comp. In dem Beispiel wird ein einfaches
+Arm-Modell verwendet, welches auf 3 Markern basiert (Schulter, Ellbogen und Handgelenk). Das
+verwendete OpenSim Modell ist das im GitHub-Repository befindliche
+Markerlose-Bewegungserfassung\//OpenSim\//models\//arm\_modell.osim.
+
+\subsection{Repository anlegen}
+Folgenden Befehl an gewünschter Stelle im Dateisystem ausführen:
+\begin{verbatim}
+    git clone https://github.com/PhilippSG/Markerlose-Bewegungserfassung.git
+\end{verbatim}
+
+\subsection{Umgebung einrichten}
+Python Version 3.12.12 verwenden und Pakete mit den in der Sektion Softwareversionen und Module des Berichts
+dargestellten Versionen installieren.
+\subsection{Videos erstellen}
+Mindestens 2 Videos werden benötigt: statische (z.B. T-Pose, ca. 3-5 Sekunden halten) und
+dynamische Aufnahme mit der gewünschten Bewegung. Genauere Anforderungen an die Videos sind im Bericht
+in der Sektion Videos beschrieben.
+
+Die Videos müssen unter dem Ordner Markerlose-Bewegungserfassung\//Videos abgelegt oder die Pfade
+im Code entsprechend angepasst werden.
+\subsection{Videos laden und anzeigen}
+Führen Sie das Jupyter Notebook \texttt{Workflow.ipynb} bis zur Zelle \texttt{Execute} aus.
+In der Zelle darunter finden sich die Variablen \texttt{static\_video\_name} und
+\texttt{dyn\_video\_name}. Setzen Sie diese auf die entsprechenden Videonamen (nur Dateiname, ohne Dateiendung).
+Führen Sie nun diese und die darauffolgende Zelle aus, um die Videos über OpenCV zu laden und
+anzuzeigen. Sollten die Videos nicht in der richtigen Ausrichtung abgespielt werden, so muss die
+Variable \texttt{rotate\_video\_by\_degrees} entsprechend angepasst werden. Rotiert wird dabei
+im Uhrzeigersinn.
+
+\subsection{Erstellen der Landmarks}
+In der nächsten Zelle findet sich die \texttt{landmark\_map}. In den Kommentaren finden
+sich bereits alle von MediaPipe BlazePose verfügbaren Marker. Hier müssen Sie
+die gewünschten Marker mit den Namen der Marker des OpenSim Modells anpassen.
+Die Marker des \texttt{arm\_modell.osim} heißen
+\texttt{r\_acromion, r\_humerus\_epicondyle und r\_radius\_styloid} und entsprechen in der Reihenfolge
+den Markern rechte Schulter, Ellbogen und Handgelenk.
+
+\subsection{Ausführen der Pose Estimation}
+In diesem Schritt findet die eigentliche Pose Estimation von MediaPipe statt.
+Vor dem jeweiligen Aufruf der \texttt{pose\_estimation} Funktion findet sich die
+Variable \texttt{rotate\_around\_y\_axis}. Diese sorgt, wie der Name vermuten lässt,
+für eine Rotation der Daten um die y-Achse. Damit kann die Ausrichtung auf die Ausrichtung
+des OpenSim Modells angepasst werden, um sicherzustellen, dass die Marker auf die des Modells
+angepasst sind. Rotiert wird dabei im Gegenuhrzeigersinn.
+
+Die Standardausrichtung des OpenSim Modells entspricht einer Person,
+die im Video nach rechts schaut. Die Beispielvideos müssen also wie in Abbildung~\ref{fig:example_orientations}
+dargestellt rotiert werden.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}{0.44\textwidth}
+        \includegraphics[width=\textwidth]{handouts/example_facing_cam.png}
+        \caption{\texttt{rotate\_around\_y\_axis = 90}}
+        \label{fig:rotate90}
+    \end{subfigure}
+    \hspace{0.5cm}
+    \begin{subfigure}{0.35\textwidth}
+        \includegraphics[width=\textwidth]{handouts/example_facing_right.png}
+        \caption{\texttt{rotate\_around\_y\_axis = 0}}
+        \label{fig:rotate0}
+    \end{subfigure}
+    \caption{Beispiel Orientierungen mit nötiger Rotation}
+    \label{fig:example_orientations}
+\end{figure}
+\end{document}

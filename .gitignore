@@ -3,8 +3,4 @@
 *.DS_Store
 
 MediaPipe/output
-MediaPipe/videos
-
-Videos/*
-
 *.log
