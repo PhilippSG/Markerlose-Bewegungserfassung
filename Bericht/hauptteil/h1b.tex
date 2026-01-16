@@ -41,7 +41,28 @@ Dafür haben wir zwei unterschiedliche OpenSim Modelle  verwendet:
     \item \texttt{arm26}\cite{opensim_models}-- Ein Standard Modell von OpenSim, welches sich nur auf den rechten Arm konzentriert.
     \item \texttt{Model\_Pose2Sim\_muscles\_flex}\cite{pose2sim_setup} -- Ein Ganzkörper Modell von pose2sim für den besseren Vergleich.
 \end{itemize}
-
+\begin{figure}[ht]
+    \centering
+    % Erstes Unter-Bild
+    \begin{subfigure}[bx]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{arm26_snapshot.png}
+        \caption{arm26}
+        \label{fig:arm26}
+    \end{subfigure}
+    \hfill % Fügt flexiblen Platz zwischen den Bildern ein
+    % Zweites Unter-Bild
+    \begin{subfigure}[bx]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Model_Pose2Sim_muscles_flex_snapshot.png}
+        \caption{Model\_Pose2Sim\_muscles\_flex}
+        \label{fig:Model_Pose2Sim_muscles_flex}
+    \end{subfigure}
+    
+    % Gemeinsame Haupt-Beschriftung
+    \caption{Vergleich der verwendeten OpenSim Modelle}
+    \label{fig:model_comparison}
+\end{figure}
 Für dieses Ziel sind vier wesentliche Schritte notwendig:
 \begin{enumerate}
     \item Erhalten der Daten aus einem Video mithilfe von MediaPipe BlazePose
@@ -261,8 +282,10 @@ Sind nach der Skalierung noch Abweichungen in den Längen der Körperteile vorha
 Fehler in der Definition der \texttt{limb\_groups} vor.
 \newpage
 \subsection{Marker Datei aus CSV}
-Eine weitere Funktion in unserem Workflow erstellt aus den Positionsdaten in der CSV Datei nun eine Marker Datei,
-welche wir in OpenSim verwenden können. Wichtig dabei ist dass unsere drei verwendeten Keypoints aus Mediapipe BlazePose
+Nachdem wir jetzt die skalierten Positionsdaten in der CSV Datei haben, müssen wir diese noch in eine
+Marker Datei (.trc) umwandeln, welche OpenSim verwenden kann.
+Eine weitere Funktion in unserem Workflow erstellt genau diese Marker Datei aus den Positionsdaten in der CSV Datei. 
+Wichtig dabei ist dass unsere drei verwendeten Keypoints aus Mediapipe BlazePose
 auch den gleichen Namen haben wie die Marker in dem Modell von OpenSim.
 
 \begin{table}[ht]
@@ -282,7 +305,6 @@ auch den gleichen Namen haben wie die Marker in dem Modell von OpenSim.
         \hline
     \end{tabular}
 \end{table}
-\newpage
 \subsection{Verwendung von Marker Datei in OpenSim}
 Anschließend wird diese Marker Datei dann in OpenSim verwendet. Dabei unterscheiden wir die Marker Dateien
 in zwei Kategorien.
@@ -294,10 +316,12 @@ in zwei Kategorien.
 \end{itemize}
 Die Statische Marker Datei ist vorallem für das Scale Tool von OpenSim wichtig.\cite{opensim_scale}
 Damit haben wir jedoch wenig Erfolg gehabt, da wir zu wenig Marker hatten um unser Modell korrekt zu skalieren.
+Das könnte ein weiterer Ansatzpunkt für zukünftige Arbeiten sein.
 
-Jede Art von Marker Datei kann man in OpenSim darstellen unter "Preview experimental Data" um die Marker visualisiert im Raum zu sehen.
+Jede Art von Marker Datei kann man in OpenSim darstellen unter \textit{File -> Preview experimental Data} 
+um die Marker visualisiert im Raum zu sehen.
 Als letzten Schritt verwenden wir die Marker Dateien im Inversen Kinematik Tool \cite{opensim_ik} von OpenSim um eine .mot
-Bewegungsdatei zu bekommen welche die Gelenkwinkel des Modells beinhaltet.
+Bewegungsdatei zu bekommen welche die Gelenkwinkel des Modells, zu unterschiedlichen Zeitpunkten, enthält.
 \newpage
 \subsection{Genauigkeit der 3D-Pose-Schätzung von MediaPipe}
 Da dies ein monokularer Ansatz ist, sind die 3D Positionen von MediaPipe BlazePose
