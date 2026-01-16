@@ -6,3 +6,5 @@ MediaPipe/output
 MediaPipe/videos
 
 Videos/*
+
+*.log
