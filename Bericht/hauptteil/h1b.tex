@@ -154,7 +154,14 @@ MediaPipe Daten auf den Ursprung von OpenSim zu verschieben.
 Für die Ursprungsverschiebung muss ein Marker als Referenz gewählt und dessen Position in OpenSim als
 Referenzkoordinate übergeben werden. Dann wird die durchschnittliche Koordinate dieses Markers über die
 statische Aufnahme berechnet und der Differenzvektor zu der OpenSim Referenzkoordinate bestimmt. Dieser
-Vektor wird dann auf alle MediaPipe Koordinaten addiert, um den Ursprung zu verschieben.
+Vektor wird dann auf alle MediaPipe Koordinaten der statischen Aufnahme addiert, um den Ursprung zu verschieben.
+
+Bei der Bewegungsaufnahme wird hingegen ein abweichendes Vorgehen gewählt. Hier wird der
+Differenzvektor nicht aus der gemittelten statischen Aufnahme bestimmt, sondern aus der Position des
+Referenzmarkers im ersten Frame der Bewegung. Dieser Vektor dient als initiale Ursprungsverschiebung
+und wird auf alle nachfolgenden Frames angewendet. Auf diese Weise startet die Bewegung im Ursprung
+des OpenSim-Modells, während gleichzeitig eine Translation des Körpers im Raum über die Zeit erhalten
+bleibt.
 
 Die Skalierung der Körperteile kann auf verschiedene Arten erfolgen:
 \begin{itemize}
