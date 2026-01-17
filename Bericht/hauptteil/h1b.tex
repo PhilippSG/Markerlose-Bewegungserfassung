@@ -38,7 +38,7 @@ Diese können wir dann mit den Gelenkwinkeln vom Pose2Sim Ansatz vergleichen.
 Dafür haben wir zwei unterschiedliche OpenSim Modelle  verwendet:
 
 \begin{itemize}
-    \item \texttt{arm26}\cite{opensim_models}-- Ein Standard Modell von OpenSim, welches sich nur auf den rechten Arm konzentriert.
+    \item \texttt{arm\_model}\cite{opensim_arm_model}-- Ein auf dem Standard-Modell arm26\cite{opensim_models} von OpenSim aufbauendes Modell, welches sich nur auf den rechten Arm konzentriert.
     \item \texttt{Model\_Pose2Sim\_muscles\_flex}\cite{pose2sim_setup} -- Ein Ganzkörper Modell von pose2sim für den besseren Vergleich.
 \end{itemize}
 \begin{figure}[ht]
@@ -47,7 +47,7 @@ Dafür haben wir zwei unterschiedliche OpenSim Modelle  verwendet:
     \begin{subfigure}[bx]{0.45\textwidth}
         \centering
         \includegraphics[width=\textwidth]{arm26_snapshot.png}
-        \caption{arm26}
+        \caption{arm\_model}
         \label{fig:arm26}
     \end{subfigure}
     \hfill % Fügt flexiblen Platz zwischen den Bildern ein
