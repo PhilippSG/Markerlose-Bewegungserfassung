@@ -71,8 +71,49 @@ haben Toolboxen erstellt und geteilt, die mit verschiedenen gängigen Bewegungse
 kompatibel sind.
 
 \underline{Tools}\newline
-Das Scale Tool erlaubt es Objektspezifisch Muskel Skelett Modelle basierend auf den experimentell
-erfassten Daten zu erstellen.
+Besonders von Bedeutung für dieses Projekt sind zum einen das Scale-Tool und zum anderen das Inverse
+Kinematics (IK)-Tool.
+
+Das Scale-Tool dient hierbei zur Anpassung der Modellgeometrie an die individuellen Eigenschaften der Körpermaße
+einer Versuchsperson. Die Skalierung basiert auf einer Kombination aus den gemessenen Abständen zwischen den
+experimentell erfassten x-y-z-Markerpositionen sowie einigen optional manuell vorgegebenen Skalierungsfaktoren.
+Die Markerpositionen werden in der Regel mit den in der Einleitung genannten Motion-Capture-Systemen aufgezeichnet.
+Das unskalierte Modell enthält korrespondierende virtuelle Marker, die an denselben anatomischen Landmarken
+wie die experimentellen Marker positioniert sind.
+Während des Skalierungsprozesses werden die Abmessungen der einzelnen Körpersegmente so angepasst, dass
+die Abstände zwischen den virtuellen Markern (Modell Marker) und den gemessenen Abständen der experimentellen Markern entsprechen.
+Ergänzend oder alternativ dazu können zu der markerbasierten Skalierung auch manuell definierte Skalierungsfaktoren
+für einzelne Körpersegmente verwendet werden, die beispielsweise aus unabhängigen anthropometrischen Messungen stammen.
+Nach Abschluss der Skalierung ermöglicht das Scale-Tool zudem, ausgewählte oder alle virtuellen Marker gezielt
+zu verschieben, sodass sie exakt mit den experimentellen Markerpositionen übereinstimmen.
+Dadurch erricht sich eine verbesserte Übereinstimmung zwischen dem gewählten Modell und den Versuchsdaten aus der Bewegungserkennung, 
+womit eine Grundlage für nachfolgende Analysen geschaffen wird.
+
+Die Inverse Kinematic (IK) Tool berechnet für jeden Zeitschritt (frame) der einer Bewegung die generalisierten Koordinaten
+des Modells, sodass dessen Pose bestmöglich mit den experimentell erfassten Marker- und gegebenfalls Koordinatendaten übereinstimmt.
+Die beste Übereinstimmung wird mathematisch als ein gewichtetes Least Square Problem (kleinstes Fehlerquadrat) formuliert, bei dem sowohl Marker als auch
+Koordinatenfehler minimiert werden.
+(Bild der Rechnung)
+Die Markerfehler die dabei entstehen sind definiert als der euklidische Abstand zwischen der Position eines experimentell bestimmten Markers
+und der entsprechenden Markerposition am virtuellen Modell, nachdem dieses durch die berechnete generalisierte Koordinaten positioniert wurde.
+Wie bereits erwähnt, ist jedem Marker ein Gewicht zugeordnet, das bestimmt, wie stark dessen Abweichung in die Gesamtfehlerfunktion eingeht.
+Analog dazu werden auch Koordinatenfehler definiert, die die Differenz zwischen einem experimentell vorgegebenen Koordinatenwert, beispielsweise 
+einem Gelenkwinkel, und dem durch die IK berechneten Wert beschreiben.
+Außerdem können die Experimentellen Koordinaten, die wiederum aus den Motion Capture Systemen, speziellen Auswertealgorithmen oder zusätzlichen
+Messgeräten wie Goniometern stammen, alternativ auch mit festen Sollwerten vorgegeben werden.
+Feste Sollwerte sind insbesondere dann sinnvoll, wenn bestimmte Gelenkwinkel konstant bleiben sollen.
+Bei der IK-Berechnung wird zwischen vorgeschriebenen und nicht vorgeschriebenen Koordinaten unterschieden.
+Vorgeschriebene Koordinaten besitzen einen bekannten Verlauf und werden während der IK nicht berechnet, sondern direkt auf ihre
+vorgegebenen Werte gesetzt (z.B. fixierte Gelenke).
+Nicht vorgeschriebene Koordinaten werden hingegen durch die IK bestimmt und gehen in das Optimierungsproblem (Least Square) ein.
+Wie bei den Markern können auch den Koordinaten unterschiedliche Gewichte zugewiesen werden, die deren Einfluss auf dei Koordinatenfehler
+bestimmen.
+
+Die Optimierung ist sensitiv gegenüber der Wahl der Einheiten.
+In der verwendetetn Modellumgebung werden Meter für Längen und Radiant für Winkel verwendet.
+Dies ist besonders beim Vergleicht mit anderen IK-Verfahren relevant, die Winkel in Grad verarbeiten.
+Um vergleichbare Ergebnisse zu erhalten, müssen die Koordinatengewichte entsprechend an die verwendetetn Winkeleinheiten angepasst werden
+
 
 Mit der statischen Optimierung kann das Muskel-Redundanzproblem gelöst werden, basierend auf
 etablierten Verfahren aus der wissenschaftlichen Literatur.
