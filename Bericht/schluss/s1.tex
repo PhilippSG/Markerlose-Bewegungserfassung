@@ -1,2 +1,84 @@
 \chapter{Schluss}
 \section{Fazit}
+Im Rahmen dieses Projekts wurde untersucht, inwieweit markerlose Bewegungserfassungssysteme zur Rekonstruktion menschlicher Bewegungen 
+und zur Bestimmung von Gelenkwinkeln in der biomechanischen Simulationsumgebung OpenSim eingesetzt werden können. 
+Dabei wurden zwei unterschiedliche Ansätze betrachtet und miteinander verglichen: ein eigenentwickelter Workflow auf Basis eines monokularen
+Pose-Schätzverfahrens sowie eine etablierte Multi-Kamera-Pipeline, die als Referenz diente.
+
+Die Ergebnisse zeigen, dass markerlose Bewegungserfassung grundsätzlich geeignet ist,
+kinematische Bewegungsdaten zu erfassen und diese erfolgreich in OpenSim zu integrieren. 
+Insbesondere konnte demonstriert werden, dass aus videobasierten Poseschätzungen Markerdateien erzeugt werden können, 
+die eine inverse Kinematik und damit die Berechnung von Gelenkwinkeln ermöglichen. Der entwickelte Workflow stellt dabei eine kostengünstige 
+und flexibel einsetzbare Alternative zu klassischen markerbasierten Bewegungserfassungssystemen dar.
+
+
+\textbf{Gegenüberstellung der Vor- und Nachteile}\newline
+\underline{Genauigkeit und biomechanische Qualität}\newline
+Im Zuge der Untersuchung konnten deutliche Unterschiede in der Rekonstruktionsqualität der beiden Ansätze festgestellt. 
+Der monokulare MediaPipe-Ansatz weist insbesondere in der 3D-Pose-Schätzung Limitationen auf, die sich vor allem in Instabilitäten der Tiefenrichtung äußern. 
+Diese führen zu erhöhten Markerfehlern und starken Schwankungen einzelner Gelenkwinkel, insbesondere in den Endlagen der Bewegung, bei Selbstüberdeckungen sowie bei geneigter Kameraperspektive. 
+Da MediaPipe ohne explizite geometrische Kamerakalibrierung arbeitet, ist die räumliche Rekonstruktion empfindlich und fehleranfälliger gegenüber Perspektivänderungen.
+
+Der Vergleich mit der Pose2Sim-OpenSim-Pipeline zeigt hingegen, dass die multikamerabasierte Triangulation mit geometrisch kalibrierten Kameras 
+stabilere und biomechanisch konsistentere 3D-Rekonstruktionen ermöglicht. Pose2Sim erweist sich damit als deutlich präziser für biomechanische Analysen.
+
+Zusätzlich stellte sich die Skalierung der OpenSim-Modelle bei MediaPipe als kritischer Faktor heraus. Die Genauigkeit der Gelenkwinkelberechnung hängt 
+stark von der Anzahl und Qualität der verwendeten Marker ab. Insbesondere bei Ganzkörpermodellen führten unzureichend präzise Landmarken und Probleme in der 
+Tiefenschätzung zu größeren Abweichungen, wodurch die biomechanische Aussagekraft weiter eingeschränkt wird.
+
+\underline{Technischer Aufwand/Komplexität und Benutzerfreundlichkeit}\newline
+Im Hinblick auf den technischen Aufwand und Benutzerfreundlichkeit zeigen sich folgende Vor-und Nachteile beider Ansätze.
+
+Die Pose2Sim-OpenSim-Pipeline erfordert ein komplexes Setup mit zwei (oder mehr) Kameras, präziser Kalibrierung und 
+einer mehrstufigen Verarbeitungskette. Initial ist die Einrichtung aufwendiger, jedoch steht anschließend eine weitgehend 
+standardisierte und reproduzierbare Verarbeitungskette zur Verfügung.
+
+Bei MediaPipe ist die initiale Erstellung einer biomechanisch verwertbaren Pipeline mit erheblichem Entwicklungsaufwand verbunden, 
+insbesondere für die Skalierung der Daten, die Transformation der Koordinatensysteme und die Integration in OpenSim. Ist diese Pipeline 
+jedoch einmal implementiert, gestaltet sich die anschließende Anwendung vergleichsweise benutzerfreundlich und unkompliziert, da vor allem 
+kein aufwendiges Kamerasetup mit geometrischer Kalibrierung erforderlich ist.
+
+\underline{Alltagstauglichkeit}\newline
+MediaPipe erweist sich als alltagstauglicher, insbesondere für mobile Einsatzszenarien, da es mit minimaler Hardware ohne aufwendiges 
+Kamerasetup flexibel in unterschiedlichen Umgebungen eingesetzt werden kann. Der Pose2Sim-Ansatz erfordert eine präzise Kamerakalibrierung 
+und ist dadurch in seiner Einsatzfähigkeit eher unflexibel.
+
+\underline{Kosten und Skalierbarkeit}\newline
+Auch hinsichtlich der Kosten unterscheiden sich die beiden Ansätze. Der MediaPipe-Workflow kann mit handelsüblicher Hardware betrieben werden 
+und erfordert in der Regel lediglich eine Standardkamera sowie einen Rechner. Dadurch ist der Ansatz kostengünstig skalierbar und auch für den 
+Einsatz außerhalb spezialisierter Labore geeignet.
+
+Die Pose2Sim-OpenSim-Pipeline ist demgegenüber mit höheren Investitionskosten verbunden. Für den Betrieb sind zwei oder mehr Kameras, sowie eine 
+(leistungsstarke) Grafikkarte erforderlich, um die umfangreichen Bilddaten verarbeiten zu können.
+
+\textbf{Geeignete Anwendungsgebiete von MediaPipe und Pose2Sim}\newline
+Aus den Ergebnissen dieser Arbeit lassen sich Anwendungsfelder für die beiden untersuchten Ansätze ableiten. MediaPipe eignet sich insbesondere für mobile, 
+flexible und alltagsnahe Anwendungen, bei denen eine schnelle und unkomplizierte Bewegungserfassung im Vordergrund steht und keine hochpräzise biomechanische 
+Analyse zwingend erforderlich ist. Mögliche Einsatzgebiete wären Fitness- und Trainings-Apps, Bewegungstracking im Alltag, Gaming, einfache Haltungsanalysen sowie Voranalysen.
+
+Die Pose2Sim-OpenSim-Pipeline ist hingegen vor allem für wissenschaftliche und klinische Anwendungen geeignet, bei denen eine hohe Genauigkeit und biomechanische Konsistenz
+der Bewegungsdaten erforderlich sind. Besonders vorteilhaft ist der Einsatz in Umgebungen, in denen das Kamerasetup über längere Zeit unverändert bleibt, beispielsweise in Laboren, 
+beispielsweise bei Entwicklung humanoider Roboter oder Kliniken, z.B. für präzise Ganganalysen, Rehabilitation nach Verletzungen,etc. In solchen Szenarien kann die aufwendige Kalibrierung 
+langfristig genutzt werden und die hohe Rekonstruktionsqualität optimal genutzt werden.
+
+\textbf{Einordnung der Ergebnisse}\newline
+Zusammenfassend zeigt das Projekt, dass markerlose Bewegungserfassung in Kombination mit biomechanischen Modellen ein hohes Potenzial für zukünftige Anwendungen besitzt, insbesondere dort, 
+wo flexible, kostengünstige und alltagstaugliche Erfassungssysteme gefragt sind.
+ 
+Für präzise biomechanische Analysen sind jedoch weiterhin robuste 3D-Rekonstruktionsverfahren, eine sorgfältige Modellskalierung sowie eine Validierung der Ergebnisse erforderlich. 
+Außerdem wird man niemals eine genauso hohe Genauigkeit bei monokularen Systemen, wie im Vergleich zu Mehrkamerasystemen erreichen können, da die Tiefeninformation bei Mehrkamerasystemen 
+durch Triangulierung wesentlich besser bestimmt werden kann.
+
+
+% Gleichzeitig wurden jedoch auch deutliche Limitationen identifiziert. 
+% Insbesondere bei der monokularen 3D-Pose-Schätzung zeigten sich Instabilitäten, vor allem in der Tiefenrichtung, 
+% die sich in erhöhten Markerfehlern und starken Schwankungen einzelner Gelenkwinkel äußerten. Diese Effekte traten 
+% verstärkt bei Endlagen der Bewegung sowie bei Selbstüberdeckungen auf und schränken die biomechanische Aussagekraft der Ergebnisse ein. 
+% Der Vergleich mit der Multi-Kamera-Pipeline verdeutlichte, dass eine präzisere räumliche Rekonstruktion zu stabileren und 
+% physikalisch plausibleren Ergebnissen führt.
+
+% Darüber hinaus stellte sich die Skalierung der OpenSim-Modelle mit MediaPipe als kritischer Schritt heraus. 
+% Durch meherere Versuche mit Ganzkörpermodellen konnte gezeigt werden, dass die Genauigkeit der Gelenkwinkelberechnung
+% stark von der Anzahl der verwendeten Marker und der Qualität der Skalierung abhängt.
+% Modelle mit einer höheren Anzahl an Markern lieferten unseren Tests nach schlechtere Ergebnisse mit größeren Abweichungen,
+% da die Pose-Estimation in diesen Fällen nicht ausreichend genaue Landmarken lieferte und große Probleme bei der Tiefenerkennung auftraten.

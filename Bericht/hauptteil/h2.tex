@@ -31,7 +31,8 @@ Das Skript wird direkt über die Kommandozeile gesteuert. Standardmäßig führt
 
 \vspace{0.5cm}
 \textbf{Verfügbarkeit des Codes:} \\
-Der vollständige Quellcode, inklusive des \texttt{pose2sim\_cli.py}-Skripts sowie detaillierter Installationsanleitungen, ist im zugehörigen GitHub-Repository \cite{github_repository} verfügbar.
+Der vollständige Quellcode, inklusive des \texttt{pose2sim\_cli.py}-Skripts sowie detaillierter Installationsanleitungen, ist im zugehörigen GitHub-Repository verfügbar: \\
+\url{https://github.com/PhilippSG/Markerlose-Bewegungserfassung}
 
 
 \subsection{Erstellen eines OpenSim-Modells mit Pose2Sim}
@@ -39,18 +40,18 @@ Der vollständige Quellcode, inklusive des \texttt{pose2sim\_cli.py}-Skripts sow
 Für eine fehlerfreie Datenverarbeitung ist die Einhaltung einer spezifischen Ordnerstruktur zwingend erforderlich. Dies bildet die Grundlage dafür, dass sowohl die Standard-Funktionen von \textbf{Pose2Sim} als auch die Automatisierung durch das \textbf{CLI-Skript} korrekt funktionieren können.
 
 Das Projektverzeichnis muss wie folgt organisiert sein:
-\begin{verbatim}  
-    Projekt_Verzeichnis/
-    |-- calibration/
-    |   |-- intrinsics/
-    |   |   |-- cam01/
-    |   |   `-- cam02/
-    |   `-- extrinsics/
-    |       |-- cam01/
-    |       `-- cam02/
-    |-- videos/         (Enthält die Rohvideos der Bewegung)
-    |-- Config.toml     (Zentrale Konfigurationsdatei)
-    `-- pose2sim_cli.py (Skript für Rotation und Automatisierung)
+\begin{verbatim}
+Projekt_Verzeichnis/
+├── calibration/
+│   ├── intrinsics/
+│   │   ├── cam01/
+│   │   └── cam02/
+│   └── extrinsics/
+│       ├── cam01/
+│       └── cam02/
+├── videos/            (Enthält die Rohvideos der Bewegung)
+├── Config.toml        (Zentrale Konfigurationsdatei)
+└── pose2sim_cli.py    (Skript für Rotation und Automatisierung)
 \end{verbatim}
 Diese Struktur stellt sicher, dass Pose2Sim die Kalibrierungsdaten (in den Unterordnern \texttt{intrinsics} und \texttt{extrinsics}) eindeutig den Videodaten zuordnen kann. Gleichzeitig ermöglicht sie dem CLI-Tool, alle Schritte im Batch-Verfahren auszuführen.
 
@@ -86,52 +87,60 @@ Die Berechnung erfolgt automatisiert durch Pose2Sim (bzw. das CLI-Tool mit dem F
 
 \textbf{Wichtig:} Damit der Algorithmus den korrekten metrischen Maßstab (Skalierung) berechnen kann, ist es entscheidend, die \textbf{Kantenlänge der Schachbrett-Quadrate} in der \texttt{Config.toml} einzutragen.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
-    \begin{subfigure}[b]{0.41\textwidth}
+    \begin{subfigure}[t]{0.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{Kamera_Setup.jpeg}
-        \caption{Kamera-Setup mit Schachbrett}
+     
+        \includegraphics[height=5cm, keepaspectratio]{Kamera_Setup.jpeg}
+        \caption{Kamera-Setup mit Schachbrett \\ (Extrinsische Kalibrierung)}
         \label{fig:setup_visuell}
     \end{subfigure}
-    \hfill 
-    \begin{subfigure}[b]{0.55\textwidth}
+    \hfill
+    \begin{subfigure}[t]{0.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{Cali_intrinsics.png}
+        \includegraphics[height=5cm, keepaspectratio]{Cali_intrinsics.png}
         \caption{Intrinsische Kalibrierung}
         \label{fig:cali_visuell}
     \end{subfigure}
-    \caption{Visualisierung der Kalibrierung. Links: Exemplarischer Aufbau des Kamera-Setups. Rechts: Darstellung der berechneten intrinsischen Parameter.}
+    
+    \caption{Visualisierung der Kalibrierung.}
     \label{fig:kalibrierung_visuell}
 \end{figure}
 
 
 \subsubsection{Konfigurationsdatei}
-Die Datei \texttt{Config.toml} fungiert als zentrale Steuerzentrale für die gesamte Pipeline. Damit die Software korrekte Ergebnisse liefert, mussten einige Schlüsselparameter explizit an das durchgeführte Experiment angepasst werden.
+Die Datei \texttt{Config.toml} fungiert als zentrale Steuerzentrale. Neben den physikalischen Parametern (wie der Schachbrettgröße) wurden basierend auf empirischen Tests spezifische Einstellungen gewählt, um die Stabilität der Pipeline zu optimieren.
 
-Die wichtigsten vorgenommenen Änderungen umfassen:
+Die wichtigsten Anpassungen, gegliedert nach den Sektionen der Konfigurationsdatei, umfassen:
 
+\paragraph{[project]}
 \begin{itemize}
-    \item \textbf{Projekt-Einstellungen (Project):} \\
-    Der Parameter \texttt{frame\_rate} muss exakt mit der Aufnahmefrequenz der Kameras übereinstimmen (z.\,B. 30 FPS). Ein falscher Wert würde dazu führen, dass die Bewegungsgeschwindigkeit in OpenSim später nicht der Realität entspricht.
-    
-    \item \textbf{Kalibrierung (Calibration):} \\
-    Hier sind zwei Werte entscheidend für die korrekte räumliche Erfassung:
-    \begin{enumerate}
-        \item \texttt{checkerboard(intrinsics, extrinsics)\_square\_size}: Definiert die reale Kantenlänge eines Quadrats auf dem Schachbrett (hier: 20\,mm). Dies dient als physikalische Referenz für die Umrechnung in Meter.
-        \item \texttt{checkerboard(intrinsics, extrinsics)\_corners\_nb}: Legt die Anzahl der \textbf{inneren Ecken} (Intersections) des Schachbrettmusters fest. Dieser Parameter (z.\,B. [8,6]) teilt dem Algorithmus mit, wie viele Kreuzungspunkte in horizontaler und vertikaler Richtung gesucht werden müssen.
-    \end{enumerate}
-
-    
-    \item \textbf{Pose-Erkennungs-Modell (Pose):} \\
-     Unter \texttt{pose\_model} wurde die Einstellung \texttt{body\_with\_feet} gewählt. Dies ist für die biomechanische Analyse essenziell, da für die spätere Skalierung in OpenSim detaillierte Fuß-Landmarken (wie Fersen und Zehen) benötigt werden.
-
-    
-    \item \textbf{Triangulierung (Triangulation):} \\
-    Der \texttt{likelihood\_threshold} wurde definiert. Dieser Wert bestimmt, wie „sicher“ sich die KI sein muss, damit ein erkannter Gelenkpunkt für die 3D-Berechnung akzeptiert wird. Punkte unterhalb dieses Schwellenwerts werden ignoriert, um Fehlberechnungen zu vermeiden.
+    \item \texttt{multi\_person}: Dieser Parameter wurde dauerhaft auf \texttt{true} gesetzt. Dies deckt sowohl Einzel- als auch Mehrpersonenaufnahmen ab und vermeidet Konfigurationsfehler.
+    \item \texttt{frame\_rate}: Kann auf \texttt{'auto'} belassen werden, da Pose2Sim die Bildwiederholrate der Videos zuverlässig aus den Metadaten ausliest.
+    \item \texttt{frame\_range}: Es wird empfohlen, den Bereich manuell zu definieren oder alle Frames zu verarbeiten. Die Einstellung \texttt{'auto'} (automatische Erkennung, wann eine Person das Bild betritt) erwies sich in Tests als fehleranfällig.
 \end{itemize}
 
-Darüber hinaus bietet die Konfigurationsdatei noch weitere Parameter zur Feinjustierung des Workflows, die jedoch für die Anforderungen dieses Projekts auf den Standardwerten belassen wurden.
+\paragraph{[pose]}
+\begin{itemize}
+    \item \texttt{pose\_model}: Hier ist \texttt{body\_with\_feet} zwingend erforderlich, um für OpenSim notwendige Fuß-Landmarken (Fersen, Zehen) zu erhalten.
+    \item \texttt{mode}: Die Einstellung \texttt{'performance'} bietet den besten Kompromiss aus Genauigkeit und Rechengeschwindigkeit (alternativ: \texttt{'balanced'}).
+    \item \texttt{tracking\_mode}: Für das Verfolgen der Personen über die Frames hinweg lieferte der Modus \texttt{'sport2d'} deutlich robustere Ergebnisse als der \texttt{'deepsort'}-Algorithmus.
+\end{itemize}
+
+\paragraph{[synchronization]}
+\begin{itemize}
+    \item \texttt{synchronization\_gui}: Da die Videos bereits durch OBS Studio synchron aufgezeichnet wurden, wird dieser Wert auf \texttt{false} gesetzt. 
+    \textit{Hinweis:} Bei manuellen, unsynchronisierten Aufnahmen müsste dieser Wert aktiviert werden, um die Videos nachträglich anhand eines visuellen Signals (z.\,B. Klatschen) anzugleichen.
+\end{itemize}
+
+\paragraph{[calibration]}
+\begin{itemize}
+    \item \texttt{type}: Standardmäßig auf \texttt{'calculate'} gesetzt.
+    \item \texttt{method}: Es wird die Methode \texttt{'board'} (Schachbrett) verwendet. Die Alternative \texttt{'scene'} (Nutzung statischer Hintergrundpunkte) ist mathematisch komplexer und lieferte unzuverlässigere Ergebnisse.
+    \item \textbf{Physikalische Parameter:} Entscheidend sind die korrekte Angabe der \texttt{checkerboard\_square\_size} (z.\,B. 0.03\,m) und der \texttt{corners\_nb} (Anzahl innerer Ecken), da diese als metrische Referenz für die 3D-Umrechnung dienen.
+    \item \textit{Effizienz:} Die Berechnung der intrinsischen Parameter muss theoretisch nur einmalig erfolgen, solange die Objektiveinstellungen (Fokus/Zoom) der Kameras unverändert bleiben.
+\end{itemize}
 
 \subsubsection{Software und Plugins}
 Zur Realisierung der synchronisierten Aufnahme kommt die Software \textbf{OBS Studio} in Kombination mit dem Plugin \textbf{Source Record} zum Einsatz. Dies ermöglicht die gleichzeitige Aufzeichnung beider Kameras.
@@ -156,7 +165,7 @@ Die Ausführung erfolgt automatisiert über das CLI-Tool mit dem Flag \texttt{-p
 \begin{figure}[ht]
     \centering
     % Bild links
-    \begin{subfigure}[t]{0.5\textwidth}
+    \begin{subfigure}[t]{0.45\textwidth}
         \centering
         % 
         % 
@@ -165,7 +174,7 @@ Die Ausführung erfolgt automatisiert über das CLI-Tool mit dem Flag \texttt{-p
         \label{fig:handshake_2d}
     \end{subfigure}
     \hfill % 
-    % Bild rechts--
+    % Bild rechts
     \begin{subfigure}[t]{0.45\textwidth}
         \centering
         \includegraphics[width=\linewidth, height=5cm, keepaspectratio]{handshake opensim.png} 
@@ -213,7 +222,7 @@ Nach Abschluss des Prozesses liegen im Ordner \texttt{pose-3d} alle für die Sim
 \end{itemize}
 Damit ist der Datensatz vollständig und kann ohne weitere Konvertierung direkt in OpenSim geladen werden.
 
-\section{Datenverarbeitung in OpenSim}
+\subsection{Datenverarbeitung in OpenSim}
 Nachdem die videobasierten Daten in Pose2Sim aufbereitet wurden, erfolgt die biomechanische Analyse in der Simulationsumgebung \textbf{OpenSim}. Dieser Prozessschritt transformiert die reinen Positionsdaten (Trajektorien) in physiologisch bedeutsame Gelenkwinkel.
 
 \subsection{Modell-Import und Vorbereitung}
@@ -265,13 +274,13 @@ Um beispielsweise zwei verschiedene Versuche oder Perspektiven gleichzeitig abzu
     \item Beim Abspielen laufen nun beide Modelle exakt synchron.
 \end{enumerate}
 
-\section{Ergebnisse von Pose2Sim}
+\subsection{Ergebnisse von Pose2Sim}
 Die durchgeführte Pipeline ermöglichte die erfolgreiche Extraktion kinematischer 3D-Daten aus den synchronisierten Videoaufnahmen. Bevor die physiologischen Gelenkwinkel betrachtet werden, erfolgt zunächst eine Analyse der Signalqualität.
 
-\subsection{Qualität der Datenaufbereitung und Filterung}
+\subsubsection{Qualität der Datenaufbereitung und Filterung}
 Ein wesentlicher Schritt der Datenverarbeitung war die Reduktion des hochfrequenten Rauschens (Jitter), das bei markerlosen Tracking-Verfahren systembedingt auftritt.
 
-Abbildung \ref{fig:filter_check} demonstriert die Effektivität des angewendeten Butterworth-Tiefpassfilters am Beispiel der 3D-Koordinaten des Hüftgelenks (Hip):
+Abbildung 2.6 demonstriert die Effektivität des angewendeten Butterworth-Tiefpassfilters am Beispiel der 3D-Koordinaten des Hüftgelenks (Hip):
 
 \begin{itemize}
     \item \textbf{Ungefiltertes Signal (Blau):} Die rohen Triangulierungsdaten zeigen deutliche, hochfrequente Ausschläge. Diese Instabilität würde in der Inversen Kinematik zu fehlerhaften Gelenkwinkelberechnungen führen.
@@ -280,7 +289,6 @@ Abbildung \ref{fig:filter_check} demonstriert die Effektivität des angewendeten
 
 \begin{figure}[H]
     \centering
-    % 注意：请确保文件名与你上传的图片文件名一致，比如 person00_Hip.png
     \includegraphics[width=1.0\textwidth]{person00_Hip.png} 
     \caption{\textbf{Einfluss der Filterung auf die 3D-Trajektorien:} Darstellung der X-, Y- und Z-Koordinaten des Hüftgelenks über die Zeit. Der Vergleich zwischen rohen (blau) und gefilterten (orange) Daten belegt die notwendige Stabilisierung des Signals für die weitere Analyse in OpenSim.}
     \label{fig:filter_check}
@@ -288,31 +296,94 @@ Abbildung \ref{fig:filter_check} demonstriert die Effektivität des angewendeten
 
 Die hier gezeigte Signalglättung bildet die notwendige Basis für die darauf folgende Berechnung der Gelenkwinkel.
 
-\subsection{Generierung der Simulationsdaten (.mot)}
+\subsubsection{Generierung der Simulationsdaten (.mot)}
 Aufbauend auf den bereinigten Trajektorien konnten im nächsten Schritt die Motion-Files (\texttt{.mot}) generiert werden. Diese Dateien stellen das finale Ergebnis der kinematischen Berechnung dar und beinhalten die zeitlichen Verläufe aller Gelenkwinkel (in Grad) für die Freiheitsgrade des Modells.
 
 Eine Überprüfung der Daten zeigt physiologisch plausible Wertebereiche (z.\,B. für Knie- und Hüftflexion), die frei von den in den Rohdaten beobachteten hochfrequenten Störungen sind. Damit stehen validierte Datensätze bereit, die direkt in der OpenSim-GUI visualisiert oder für weiterführende biomechanische Analysen herangezogen werden können.
 
 
-\subsection{Kritische Einflussfaktoren}
-Die Qualität der Ergebnisse wird primär durch drei Faktoren bestimmt:
+\subsubsection{Kritische Einflussfaktoren}
+Die Evaluation der Pipeline identifizierte folgende Parameter als qualitätsbestimmend:
+
 \begin{itemize}
-    \item \textbf{Setup:} Lichtverhältnisse, Kontrast (Kleidung/Hintergrund) und absolute Kamerastabilität.
-    \item \textbf{Proband:} Eng anliegende Kleidung (Tight-Fit) ist essentiell; weite Kleidung verschlechtert die Gelenk-Lokalisierung.
-    \item \textbf{Szenario:} Anzahl der Personen und statische Objekte im Erfassungsbereich.
+    \item \textbf{Hardwareseitige Restriktionen (Kamera-Anzahl):} 
+    Der Versuchsaufbau beschränkte sich auf ein Dual-Kamera-Setup. Voruntersuchungen zeigten, dass die Einbindung weiterer Perspektiven auf der verwendeten mobilen Workstation (Intel Core i5-11400H, 16GB RAM, NVIDIA RTX 3060) zu einer instabilen Bildrate (Frame Drops) führte. 
+    Dieser Leistungsengpass ist primär auf die begrenzte \textbf{Video-Encodierungs-Bandbreite} der GPU zurückzuführen, welche eine simultane Echtzeitverarbeitung von mehr als zwei HD-Streams verhinderte.
+
+    \item \textbf{Beleuchtung \& Kontrast:} 
+    Eine ausreichende Ausleuchtung ist zwingend. Dunkle Kleidung in dunkler Umgebung führte zu massivem Signalverlust („Teleportation“).
+
+    \item \textbf{Kleidung:} 
+    Eng anliegende Kleidung (Tight-Fit) ist essenziell, da weite Stoffe die Lokalisierung der anatomischen Gelenkzentren verfälschen.
+
+    \item \textbf{Okklusion:} 
+    Verdeckungen durch externe Objekte (z.\,B. Rollstuhl) oder Selbstverdeckung (z.\,B. verschränkte Arme) führen zu Tracking-Aussetzern und Artefakten.
+
+    \item \textbf{Foot Sliding:} 
+    Da keine Bodenreaktionskräfte gemessen werden, kann es im Modell zu minimalem Rutschen der Füße kommen.
 \end{itemize}
 
-\subsection{Systemgrenzen und Beobachtungen}
+\subsubsection{Systemgrenzen und Beobachtungen}
 \textbf{Stärken (Positiv):}
 \begin{itemize}
-    \item \textbf{Tiefenstabilität:} Das System unterscheidet robust zwischen aktiven Personen und störenden Bewegungen im Hintergrund.
-    \item \textbf{Skalierung:} Individuelle Körperproportionen (Größe, Statur) werden korrekt ins Modell übertragen.
+    \item \textbf{Komplexe Interaktionen:} 
+    Das System erfasst nicht nur zyklisches Gehen, sondern auch komplexe, nicht-zyklische Bewegungen wie \textbf{Händeschütteln} oder Bewegungen in \textbf{sitzender Position} (im Stuhl).
+    
+    \item \textbf{Robuste Identifizierung (ID-Tracking):} 
+    Eine bemerkenswerte Stärke ist die Trennschärfe bei mehreren Personen. Der Algorithmus unterscheidet Individuen zuverlässig, selbst wenn diese eine \textbf{ähnliche Statur, identische Kleidung} und gleiche Bewegungsmuster aufweisen.
+    
+    \item \textbf{Anthropometrische Skalierung:} 
+    Die generierten OpenSim-Modelle bilden individuelle \textbf{Körpergrößen und Proportionen} der Teilnehmer maßstabsgetreu ab, sodass Größenunterschiede in der Simulation visuell und rechnerisch exakt wiedergegeben werden.
+    
+    \item \textbf{Tiefenstabilität:} 
+    Das System unterscheidet robust zwischen aktiven Personen im Vordergrund und störenden Bewegungen im Hintergrund.
 \end{itemize}
 
 \textbf{Schwächen (Limitierungen):}
 \begin{itemize}
     \item \textbf{Beleuchtung:} Kombinationen aus dunkler Kleidung und schwachem Licht führen zu massivem Signalverlust („Teleportation“).
-    \item \textbf{Okklusion (Verdeckung):} Sowohl externe Objekte (z.\,B. Rollstuhl) als auch \textbf{Selbstverdeckung} (z.\,B. verschränkte Arme) erzeugen Artefakte.
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Error.png} 
+    \caption{\textbf{Tracking-Abbruch bei Dunkelheit:} Auszug aus dem System-Log. Aufgrund mangelnden Kontrasts, schlechter Kalibrierung sowie unvollständiger Abbildung der Person im Frame konnte keine kontinuierliche Erkennung gewährleistet werden.}
+    \label{fig:error_dark}
+\end{figure}
+    \item \textbf{Okklusion (Verdeckung):} 
+    Neben statischen Objekten (z.\,B. Rollstuhl) stellen insbesondere *dynamische Überlappungen* eine Fehlerquelle dar. Bei Multi-Personen-Aufnahmen ist eine strikte räumliche Trennung der Akteure zwingend erforderlich. Kreuzen sich die Laufwege der Personen (Crossing), kann der Algorithmus die Gelenke nicht mehr eindeutig zuordnen (Identity Switch), was zum Zusammenbruch der Simulation führt.
+
+\begin{figure}[H]
+    \centering
+    % --- Bild 1: Vorher ---
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{8 walk vor überschneidung.png}
+        \caption{Vor der Kreuzung: Korrekte IDs (0 und 1).}
+        \label{fig:cross_before}
+    \end{subfigure}
+    \hfill
+    % --- Bild 2: Während ---
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{8 walk bei der Überschneidung.png}
+        \caption{Überlappung: Verlust der Skelettstruktur.}
+        \label{fig:cross_during}
+    \end{subfigure}
+    \hfill
+    % --- Bild 3: Nachher ---
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{8 walk nach überschneidung.png}
+        \caption{Nach der Kreuzung: Identity Switch (ID 0 $\to$ 4).}
+        \label{fig:cross_after}
+    \end{subfigure}
+    
+    \caption{\textbf{Fehleranalyse bei dynamischer Okklusion (Crossing):} Die Bildsequenz demonstriert das Versagen des Trackings bei sich kreuzenden Laufwegen. 
+    (a) Die Personen werden korrekt getrackt (Blau: ID 0, Rot: ID 1). 
+    (b) Während der Überlappung kann der Algorithmus die Gliedmaßen nicht mehr zuordnen. 
+    (c) Nach der Trennung erhält die männliche Person fälschlicherweise eine neue ID (Gelb: ID 4 statt Blau: ID 0), was die Kontinuität der Simulation unterbricht.}
+    \label{fig:occlusion_sequence}
+\end{figure}
+    
     \item \textbf{Foot Sliding:} Da keine Kraftmessplatten verwendet werden, neigen die Füße im Modell zu leichtem Rutschen auf dem Boden.
     \item \textbf{Bewegungsunschärfe:} Sehr schnelle Bewegungen führen zu ungenauen Keypoints und erfordern stärkere Filterung.
 \end{itemize}
