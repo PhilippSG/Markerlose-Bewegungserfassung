@@ -41,17 +41,17 @@ Für eine fehlerfreie Datenverarbeitung ist die Einhaltung einer spezifischen Or
 
 Das Projektverzeichnis muss wie folgt organisiert sein:
 \begin{verbatim}
-Projekt_Verzeichnis/
-├── calibration/
-│   ├── intrinsics/
-│   │   ├── cam01/
-│   │   └── cam02/
-│   └── extrinsics/
-│       ├── cam01/
-│       └── cam02/
-├── videos/            (Enthält die Rohvideos der Bewegung)
-├── Config.toml        (Zentrale Konfigurationsdatei)
-└── pose2sim_cli.py    (Skript für Rotation und Automatisierung)
+    Projekt_Verzeichnis/
+    |-- calibration/
+    |   |-- intrinsics/
+    |   |   |-- cam01/
+    |   |   `-- cam02/
+    |   `-- extrinsics/
+    |       |-- cam01/
+    |       `-- cam02/
+    |-- videos/         (Enthält die Rohvideos der Bewegung)
+    |-- Config.toml     (Zentrale Konfigurationsdatei)
+    `-- pose2sim_cli.py (Skript für Rotation und Automatisierung)
 \end{verbatim}
 Diese Struktur stellt sicher, dass Pose2Sim die Kalibrierungsdaten (in den Unterordnern \texttt{intrinsics} und \texttt{extrinsics}) eindeutig den Videodaten zuordnen kann. Gleichzeitig ermöglicht sie dem CLI-Tool, alle Schritte im Batch-Verfahren auszuführen.
 
