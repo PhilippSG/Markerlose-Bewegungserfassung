@@ -36,7 +36,7 @@ Gelenkwinkel beinhalten.
 Die verwendeten Dateien, die Originalvideos sowie ein Ergebnisvideo,
 welches die Eingabevideos gemeinsam mit dem entsprechenden
 OpenSim-Ergebnis darstellt, sind im GitHub-Repository \cite{github_repository}
-unter \href{https://github.com/PhilippSG/Markerlose-Bewegungserfassung/tree/main/Vergleich}{Vergleich/} wiederzufinden.
+unter \url{Vergleich_MP-P2S/} wiederzufinden.
 
 Zuerst betrachten wir die aus der inversen Kinematik resultierenden Markerfehler. Diese geben an,
 wie nah die Modell-Marker an die Marker der extrahierten Daten angepasst werden
@@ -97,8 +97,8 @@ Erkennung besser in einer langsamen Bewegung funktioniert, da hier vermutlich di
 Bewegungsrichtung und -geschwindigkeit berücksichtigt werden können.
 
 Die größten Abweichungen zeigen sich jedoch, wie zu erwarten, in der 3D Schätzung.
-Besonders deutlich wird dies anhand des Winkels r\_shoulder\_side,
+Besonders deutlich wird dies anhand des Winkels \texttt{r\_shoulder\_side},
 der maßgeblich für die Bewegung in z-Richtung ist.
-Während MediaPipe hier starke Schwankungen zeigt – insbesondere erneut in der oberen
-Endlage – bleibt der entsprechende Winkel bei Pose2Sim über das gesamte Video
+Während MediaPipe hier starke Schwankungen zeigt -- insbesondere erneut in der oberen
+Endlage -- bleibt der entsprechende Winkel bei Pose2Sim über das gesamte Video
 hinweg nahezu konstant.
