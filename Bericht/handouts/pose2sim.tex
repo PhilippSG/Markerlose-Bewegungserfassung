@@ -1,0 +1,117 @@
+%Einfügen der Header-Dateien
+\input{header/settings.tex}
+
+% Start des Dokuments
+\begin{document}
+\setcounter{chapter}{0}
+\renewcommand{\thesection}{\arabic{section}} % Sections nur arabisch nummerieren
+\newpage
+\begin{center}
+	{\LARGE \textbf{Handout: Pose2Sim-Pipeline}}\\[0.5cm]
+\end{center}
+
+\section{Aufnahme vorbereiten}
+Mindestens zwei Kameras im L-Setup platzieren und so ausrichten, dass die Person von Kopf bis Fuß sichtbar ist. Markieren Sie den Bewegungsbereich, in dem die Person permanent sichtbar bleibt. Jede Bewegung muss von beiden Kameras zumindest zeitweise erfasst werden, damit jede Extremität in beiden Perspektiven erscheint.
+
+\begin{itemize}
+	\item \textbf{Sichtbarkeit:} Kein Körperteil darf länger außerhalb des Bildes sein; jede Extremität muss in beiden Kameras wenigstens kurz sichtbar sein.
+	\item \textbf{Kamerastand:} Kameras nach der Kalibrierung nicht mehr bewegen. Bereits Millimeter-Verschiebungen entwerten die extrinsische Kalibrierung.
+	\item \textbf{Smartphone-Kameras:} Variable Frame Rate (VFR) abschalten. Tipp: In der Kamera-App 1080p/30fps und "Konstante Bildrate" bzw. "Fixe Framerate" aktivieren; alternativ per Open Camera (Android) oder Pro-Video-Modus (iOS) mit CFR aufnehmen.
+	\item \textbf{Belichtung/Kontrast:} Helle, homogene Beleuchtung; Kleidung mit hohem Kontrast zum Hintergrund; enganliegende Kleidung vermeidet Artefakte.
+	\item \textbf{Synchroner Start:} Kurzer Klatsch oder LED-Blitz zu Beginn erleichtert die Sichtprüfung der Synchronisation.
+\end{itemize}
+
+\section{Kalibrierung}
+\subsection{Checkerboard (allgemein)}
+Ungleiche Seitenlängen verwenden (rechtwinkliges Rechteck, kein Quadrat). In \texttt{Config.toml} müssen die inneren Ecken eingetragen werden: Bei 9\,x\,7 Feldern sind es [8, 6]; gilt für \texttt{intrinsics} und \texttt{extrinsics}.
+
+\subsection{Intrinsische Kalibrierung}
+\begin{itemize}
+	\item Checkerboard auf eine starre, plane Unterlage kleben, damit sich das Muster nicht verzieht.
+	\item Langsam führen, Bewegungsunschärfe vermeiden; Ziel: Reprojektionfehler < 0.5 px.
+	\item Das Board durch den Bildausschnitt bewegen (von links nach rechts und umgekehrt).
+	\item Das Board zu verschiedenen Winkeln und Seiten kippen, um unterschiedliche Perspektiven zu erfassen.
+	\item Genügend unterschiedliche Perspektiven aufnehmen, aber ohne schnelle Schwenks.
+\end{itemize}
+
+\subsection{Extrinsische Kalibrierung}
+Kurzes, aber kritisches Teilstück. Das große PVC-Board muss gleichzeitig komplett in allen Kameras sichtbar sein und darf in keiner Kamera diagonal liegen; ideal ist parallel/perpendicular zur Blickrichtung. Manuelle Punktwahl ist sehr unsicher und sollte vermieden werden.
+
+\begin{itemize}
+	\item 2 Sekunden Video genügen; danach Board entfernen und Szene für die eigentliche Aufnahme freiräumen.
+	\item Nach der Berechnung prüfen, ob die Punktnummerierung in allen Perspektiven übereinstimmt (z.\,B. nordöstlicher Punkt = 1 in allen Kameras, südwestlicher = 64).
+	\item Wird eine Kamera nach der Extrinsik bewegt (selbst $\approx 1$ mm), Extrinsik erneut aufnehmen; Intrinsik bleibt gültig, solange Kamera und Linse unverändert bleiben.
+\end{itemize}
+
+\section{Häufige Fehlerquellen}
+\begin{itemize}
+	\item Zu dunkle Szene, geringe Beleuchtung, dunkle Kleidung oder geringer Kontrast.
+	\item Zu schnelle Bewegungen, starke Bewegungsunschärfe.
+	\item PVC-Banner während der Extrinsik diagonal oder nur teilweise sichtbar.
+	\item Manuelle Auswahl der Extrinsik-Punkte; führt oft zu Fehlkalibrierungen.
+	\item Hoher Kalibrierfehler nach Intrinsik/Extrinsik ignoriert.
+	\item Proband verlässt den Bildausschnitt oder wird von anderen Personen verdeckt; Personen kreuzen sich und verdecken sich gegenseitig.
+	\item Lange, weite Kleidung (Mantel, weites Shirt) verdeckt Gelenke.
+	\item Falsche \texttt{frame\_rate} in \texttt{Config.toml}; bei Unsicherheit auf \texttt{auto} oder exakt auf die Aufnahmefrequenz setzen.
+\end{itemize}
+
+\section{Ausführungsschritte}
+\subsection{Vorbereitung}
+Nach der Installation von Miniconda (siehe Hauptbericht und \url{https://github.com/perfanalytics/pose2sim}) müssen alle erforderlichen Dateien im Projektverzeichnis vorliegen:
+\begin{itemize}
+	\item Ordner mit Kalibrierungsvideos und Bewegungsaufnahmen.
+	\item \texttt{Config.toml} mit angepassten Parametern.
+	\item \texttt{pose2sim\_cli.py} (aus \url{https://github.com/PhilippSG/Markerlose-Bewegungserfassung/tree/main/Pose2Sim}).
+\end{itemize}
+
+\subsection{Pipeline starten}
+\begin{enumerate}
+	\item Anaconda Terminal öffnen und zum Projektverzeichnis navigieren: \\\texttt{cd path/to/your/directory}
+	\item Umgebung aktivieren: \\\texttt{conda activate pose2sim}
+	\item \textbf{Kalibrierung prüfen} (empfohlen): \\\texttt{python pose2sim\_cli.py -c} \\ Überprüfen, ob Intrinsik-Fehler < 0.5 px und Extrinsik-Punkte automatisch und korrekt erkannt wurden.
+	\item Vollständige Pipeline starten: \\\texttt{python pose2sim\_cli.py}
+	\item Für alle verfügbaren Flags und Funktionen: \\\texttt{python pose2sim\_cli.py -h}
+\end{enumerate}
+
+\subsection{Erwartete Ausgabe}
+Nach Abschluss der Pipeline sollten sich im Ordner \texttt{kinematics} folgende Dateien befinden:
+\begin{itemize}
+	\item \texttt{.sto} (Trajectory File).
+	\item \texttt{.osim} (OpenSim Model).
+	\item \texttt{.mot} (Motion File für OpenSim).
+\end{itemize}
+
+Detaillierte Dokumentation, weitere Use-Cases und erforderliche Versionen finden sich im GitHub-Repository unter \url{https://github.com/perfanalytics/pose2sim}.
+
+\section{Parameter-Cheatsheet}
+Nur die kritischsten Einstellungen in \texttt{Config.toml}. Für Vollständigkeit siehe Hauptbericht und GitHub-Dokumentation.
+
+\subsection{Unter \texttt{[project]}}
+\begin{itemize}
+	\item \texttt{multi\_person}: Kann als \texttt{true} belassen werden (funktioniert für Single- und Multi-Person-Aufnahmen).
+	\item \texttt{frame\_rate}: Auf \texttt{auto} setzen oder exakt die Aufnahmefrequenz eingeben.
+	\item \texttt{frame\_range}: Auf \texttt{all} setzen, damit alle Frames verarbeitet werden (\texttt{auto} ist unzuverlässig bei Personen, die während der Aufnahme ins Frame kommen).
+\end{itemize}
+
+\subsection{Unter \texttt{[pose]}}
+\begin{itemize}
+	\item \texttt{vid\_img\_extension}: Auf die korrekte Dateityp überprüfen (z.\,B. \texttt{.mp4}, \texttt{.mov}).
+	\item \texttt{mode}: Auf \texttt{performance} setzen (\texttt{balanced} funktioniert auch, ist aber langsamer).
+	\item \texttt{tracking\_mode}: \texttt{sport2d} liefert bessere Ergebnisse als \texttt{deepsort}.
+\end{itemize}
+
+\subsection{Unter \texttt{[synchronization]}}
+\begin{itemize}
+	\item \texttt{synchronization\_gui}: Auf \texttt{false} setzen, wenn OBS Studio + Source Record verwendet wird. Auf \texttt{true} und schnelle Handbewegung (Klatschen) während der Aufnahme, wenn manuell synchronisiert wird.
+\end{itemize}
+
+\subsection{Unter \texttt{[calibration]}}
+\begin{itemize}
+	\item \texttt{type}: Immer \texttt{calculate}.
+	\item \texttt{method}: Auf \texttt{board} setzen (\texttt{scene} ist unzuverlässiger).
+	\item \texttt{intrinsics}: Nur einmal nötig, wenn die Kameras dieselben bleiben.
+\end{itemize}
+
+% Fuer Installations- und Versionsdetails siehe Hauptbericht.
+
+\end{document}
