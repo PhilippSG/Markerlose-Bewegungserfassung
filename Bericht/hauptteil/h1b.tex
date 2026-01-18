@@ -1,4 +1,3 @@
-
 \section{Vergleich zweier Ansätze zur markerlosen Pose-Erfassung}
 In diesem Kapitel werden zwei Ansätze zur markerlosen Pose-Erfassung
 untersucht und miteinander verglichen: zum einen ein eigener Workflow mit MediaPipe als Ansatz zur
@@ -23,11 +22,13 @@ zu validieren oder auf erweiterte Datensätze und Anwendungsszenarien anzuwenden
 \section{Ablauf bei der Verwendung von MediaPipe}
 Zu Beginn brauchen wir aus unseren 2D Daten, in Form eines Videos von unserer Kamera,
 geschätzte 3D-Koordinaten von markanten Punkten am Körper (Keypoints).
-Wir haben dabei das BlazePose Modell verwendet welches 33 Keypoints liefert.
+Wir haben dabei das BlazePose Modell verwendet welches die in Abbildung~\ref{fig:BlazePose Topologie}
+dargestellten Keypoints liefert.
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=\textwidth]{MediaPipe-pose-BlazePose-Topology.jpg}
-    \label{fig:BlazePose Topologie} 
+    \includegraphics[width=\textwidth]{MediaPipe-pose-BlazePose-Topology.jpg}    
+    \caption{}
+    \label{fig:BlazePose Topologie}
 \end{figure}
 
 Für die vorliegende Arbeit wurde bewusst ein vereinfachtes Arm-Modell verwendet, das
