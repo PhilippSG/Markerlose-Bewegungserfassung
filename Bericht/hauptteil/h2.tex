@@ -87,15 +87,24 @@ Die Berechnung erfolgt automatisiert durch Pose2Sim (bzw. das CLI-Tool mit dem F
 
 \textbf{Wichtig:} Damit der Algorithmus den korrekten metrischen Maßstab (Skalierung) berechnen kann, ist es entscheidend, die \textbf{Kantenlänge der Schachbrett-Quadrate} in der \texttt{Config.toml} einzutragen.
 
-\begin{figure}[ht] 
+\begin{figure}[ht]
     \centering
-    \includegraphics[width=0.48\textwidth]{Bericht/img/Kamera_Setup.jpeg}
-    \hfill
-    \includegraphics[width=0.48\textwidth]{Bericht/img/Cali_intrinsics.png}
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Bericht/img/Kamera_Setup.jpeg}
+        \caption{Kamera-Setup mit Schachbrett}
+        \label{fig:setup_visuell}
+    \end{subfigure}
+    \hfill 
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Bericht/img/Cali_intrinsics.png}
+        \caption{Intrinsische Kalibrierung}
+        \label{fig:cali_visuell}
+    \end{subfigure}
     
-    % Gemeinsame Bildunterschrift
-    \caption{Links: Exemplarischer Aufbau des Kamera-Setups mit Schachbrettmuster. Rechts: Beispielhafte Darstellung der intrinsischen Kalibrierungsergebnisse.}
-    \label{fig:kalibrierung_visuell} % Ein neuer, passenderer Label-Name
+    \caption{Visualisierung der Kalibrierung. Links: Exemplarischer Aufbau des Kamera-Setups. Rechts: Darstellung der berechneten intrinsischen Parameter.}
+    \label{fig:kalibrierung_visuell}
 \end{figure}
 
 
