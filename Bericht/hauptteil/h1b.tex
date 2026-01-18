@@ -30,46 +30,41 @@ Wir haben dabei das BlazePose Modell verwendet welches 33 Keypoints liefert.
     \label{fig:BlazePose Topologie} 
 \end{figure}
 
-Fokussiert haben wir uns dabei erstmal auf drei Keypoints um eine bessere Übersicht zu behalten.
+Für die vorliegende Arbeit wurde bewusst ein vereinfachtes Arm-Modell verwendet, das
+ausschließlich auf drei Markern basiert:
 \begin{itemize}
     \item 11. rechte Schulter
     \item 13. rechter Ellbogen
     \item 15. rechtes Handgelenk
 \end{itemize}
-\newpage
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{arm_model_snapshot.png}
+    \caption{arm\_model}
+    \label{fig:arm_model}
+\end{figure}
+
+Das in Abbildung \ref{fig:arm_model} dargestellte \texttt{arm\_model} stellt eine Erweiterung des Standard-OpenSim-Modells
+namens \texttt{arm26} dar und wurde um zwei zusätzliche Freiheitsgrade erweitert. Damit
+hat das Modell die folgenden Gelenkwinkel:
+\begin{itemize}
+    \item \texttt{r\_shoulder\_elev}
+    \item \texttt{r\_shoulder\_side}
+    \item \texttt{r\_elbow\_flex}
+    \item \texttt{r\_elbow\_rotation}
+\end{itemize}
+Die Entscheidung für dieses reduzierte Modell ergab sich aus wiederholten, jedoch nicht zufriedenstellenden
+Versuchen, Ganzkörper-Posen mit der entwickelten Pipeline zu verarbeiten und konsistent darzustellen.
+
+Die Hauptursache liegt in der aktuell verwendeten Skalierfunktion, die ausschließlich feste Segmentlängen
+berücksichtigen kann. Dadurch ist eine korrekte Skalierung dynamischer Verbindungen zwischen Ober-
+und Unterkörper nicht möglich, was eine realitätsgetreue Abbildung komplexer Ganzkörperbewegungen verhindert.
+
 Unser Ziel ist es, diese drei Keypoints aus MediaPipe BlazePose auf ein Modell in OpenSim zu übersetzen
 und, mithilfe des Inversen Kinematik Tools von OpenSim \cite{opensim_ik}, Gelenkwinkel von einer Bewegung herauszubekommen.
 Diese können wir dann mit den Gelenkwinkeln vom Pose2Sim Ansatz vergleichen.
-Dafür haben wir zwei unterschiedliche OpenSim Modelle  verwendet:
 
-\begin{itemize}
-    \item \texttt{arm\_model} -- Ein auf dem Standard-Modell arm26 \cite{opensim_models} von OpenSim aufbauendes Modell,
-    welches sich nur auf den rechten Arm konzentriert. Das Modell befindet sich im GitHub-Repository \cite{github_repository}
-    unter \url{OpenSim/models/arm\_model.osim}.
-    \item \texttt{Model\_Pose2Sim\_muscles\_flex} \cite{pose2sim_setup} -- Ein Ganzkörper Modell von pose2sim für den besseren Vergleich.
-\end{itemize}
-\begin{figure}[ht]
-    \centering
-    % Erstes Unter-Bild
-    \begin{subfigure}[bx]{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{arm26_snapshot.png}
-        \caption{arm\_model}
-        \label{fig:arm26}
-    \end{subfigure}
-    \hfill % Fügt flexiblen Platz zwischen den Bildern ein
-    % Zweites Unter-Bild
-    \begin{subfigure}[bx]{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Model_Pose2Sim_muscles_flex_snapshot.png}
-        \caption{Model\_Pose2Sim\_muscles\_flex}
-        \label{fig:Model_Pose2Sim_muscles_flex}
-    \end{subfigure}
-    
-    % Gemeinsame Haupt-Beschriftung
-    \caption{Vergleich der verwendeten OpenSim Modelle}
-    \label{fig:model_comparison}
-\end{figure}
 Für dieses Ziel sind vier wesentliche Schritte notwendig:
 \begin{enumerate}
     \item Erhalten der Daten aus einem Video mithilfe von MediaPipe BlazePose
@@ -80,7 +75,7 @@ Für dieses Ziel sind vier wesentliche Schritte notwendig:
 Das Ergebnis des Inversen Kinematik Tools von OpenSim ist dann eine Bewegungs Datei (.mot).
 In dieser finden wir dann die Gelenkwinkel zu bestimmten Zeitpunkten.
 
-Nun folgt eine Beschreibung des Workflows. \newpage
+Nun folgt eine Beschreibung des Workflows.
 \subsection{Softwareversionen und Module}
 Wir haben uns für die Programmiersprache Python entschieden, da es eine einfache und schnelle Möglichkeit bietet,
 um Bildverarbeitungs Bibliotheken zu verwenden. Außerdem ist Python sehr verbreitet in der
@@ -110,6 +105,8 @@ ein Video von  \textbf{einer} Person. Für eine gute Aufnahme sollte folgendes b
     \item Die Person sollte vom Hintergrund unterscheidbar sein.
     \item Die Beleuchtung sollte ausreichend sein, damit die Kamera die Person gut erkennen kann.
     \item Die Kamera sollte still stehen, damit keine Bewegungsunschärfe entsteht.
+    \item Die Kamera sollte möglichst horizontal ausgerichtet sein, da ein starker Kamerawinkel dazu führen kann, 
+          dass MediaPipe die Körperhaltung fälschlicherweise als geneigt oder lehnend interpretiert.
 \end{itemize}
 
 Unsere erste Funktion gibt uns unsere aufgenommenen Videos mit eingezeichneten Skeletten wieder.
@@ -150,7 +147,7 @@ Pose-Schätzung ein neues Modell zu erzeugen, das noch nicht auf zuvor verarbeit
 Daten basiert. Dadurch wird sichergestellt, dass beim Wechsel von der statischen zur
 dynamischen Aufnahme kein zeitlicher Zusammenhang zwischen den beiden Sequenzen
 besteht. Insbesondere wird verhindert, dass die Marker ausgehend von der Endposition
-der statischen Aufnahme zur Startposition der dynamischen Bewegung interpoliert oder
+der statischen Aufnahme zur Startposition der dynamischen Bewegung interpoliert werden oder
 „wandern“, wodurch konsistente und unabhängige Initialbedingungen für beide Aufnahmen
 gewährleistet werden.
 
