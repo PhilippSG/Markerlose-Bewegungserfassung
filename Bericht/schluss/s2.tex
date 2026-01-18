@@ -1,2 +1,40 @@
 \section{Ausblick} %Mögliche Weiterentwicklungen und Verbesserungen
-Verbesserung der Pipeline
+Das vorliegende Projekt stellt eine funktionale Pipeline zur markerlosen Bewegungserfassung und 
+biomechanischen Auswertung in OpenSim bereit. 
+Die erzielten Ergebnisse zeigen jedoch zugleich mehrere Ansatzpunkte für weiterführende Arbeiten, 
+die von einer nachfolgenden Projektgruppe aufgegriffen und vertieft werden können.
+
+Ein zentraler Schwerpunkt zukünftiger Arbeiten liegt in der weiteren Verbesserung und Erweiterung der bestehenden Pipeline. 
+Insbesondere bietet sich ein systematischer Vergleich unterschiedlicher Pose-Estimation-Modelle an. 
+Neben weiteren Modellen innerhalb von MediaPipe könnten auch alternative Frameworks wie OpenPose oder 
+vergleichbare Open-Source-Ansätze untersucht werden, um deren Robustheit, Genauigkeit und Eignung für 
+biomechanische Anwendungen zu bewerten.
+
+Darüber hinaus kann die Genauigkeit der 3D-Rekonstruktion insbesondere im Pose2Sim-Ansatz weiter erhöht werden. 
+Während im aktuellen Projekt ein Setup mit zwei Kameras betrachtet wurde, könnte der Einsatz zusätzlicher Kameras 
+die Tiefenrekonstruktion stabilisieren und die Auswirkungen von Selbstüberdeckungen reduzieren. Eine Analyse des 
+Einflusses der Kamerazahl, Positionierung und Kalibrierungsqualität auf die Rekonstruktionsergebnisse stellt dabei 
+einen vielversprechenden Ansatz dar.
+
+Ein weiterer möglicher Entwicklungsschritt betrifft die inverse Kinematik. 
+Neben dem in OpenSim integrierten IK-Tool könnten alternative IK-Verfahren untersucht werden, 
+beispielsweise durch eine eigene Implementierung oder durch den Vergleich mit anderen Optimierungsansätzen. 
+Ziel wäre es, die Sensitivität gegenüber Markerfehlern zu reduzieren und stabilere Gelenkwinkelverläufe zu erzielen.
+
+Auch die Skalierung der biomechanischen Modelle bietet weiteres Optimierungspotenzial. 
+Insbesondere Körpersegmente mit variabler Länge, wie beispielsweise die Verbindung zwischen Schulter und Hüfte in markerlosen Pose-Schätzungen, 
+stellen derzeit eine Herausforderung dar. Zukünftige Arbeiten könnten neue Skalierungsstrategien entwickeln, 
+etwa durch zusätzliche geometrische Constraints, anthropometrische Modelle oder zeitliche Mittelung über geeignete Bewegungssequenzen.
+
+Darüber hinaus könnte der Pose2Sim-Ansatz weiter verbessert und systematisch mit markerbasierten Bewegungserfassungssystemen verglichen werden. 
+Da markerbasierte Systeme derzeit als Referenzstandard gelten, würde ein solcher Vergleich eine fundierte Validierung der markerlosen Pipeline ermöglichen und 
+deren biomechanische Genauigkeit besser einordnen.
+
+Ein weiterer vielversprechender Ansatz besteht in der Erweiterung der Pose-Estimation durch zusätzliche Sensorik. 
+Beispielsweise könnte die Kombination von Smartphone-Kameras mit integrierten LiDAR-Sensoren genutzt werden, 
+um zusätzliche Tiefeninformationen zu erfassen und die 3D-Rekonstruktion insbesondere bei monokularen Ansätzen zu verbessern. 
+Die Fusion visueller und distanzbasierter Daten stellt dabei ein interessantes Forschungsfeld dar.
+
+Insgesamt bietet das Projekt eine solide Grundlage für weiterführende Untersuchungen, 
+die sowohl die methodische Genauigkeit als auch die praktische Anwendbarkeit markerloser Bewegungserfassungssysteme 
+in biomechanischen Analysen weiter verbessern können.
