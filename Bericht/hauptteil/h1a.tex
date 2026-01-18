@@ -88,6 +88,14 @@ Nach Abschluss der Skalierung ermöglicht das Scale-Tool zudem, ausgewählte ode
 zu verschieben, sodass sie exakt mit den experimentellen Markerpositionen übereinstimmen.
 Dadurch erricht sich eine verbesserte Übereinstimmung zwischen dem gewählten Modell und den Versuchsdaten aus der Bewegungserkennung, 
 womit eine Grundlage für nachfolgende Analysen geschaffen wird.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Scaling_bsp.png}
+    \caption{Experimentelle und virtuelle Marker}
+    \label{fig:scaling_bsp}
+    
+\end{figure}
+In der Abbildung \ref{fig:scaling_bsp} in Blau sind die experimentellen Marker dargestellt, in Pink die virtuellen Modellmarker nach der Skalierung. \cite{opensim_scale}
 
 Die Inverse Kinematic (IK) Tool berechnet für jeden Zeitschritt (frame) der einer Bewegung die generalisierten Koordinaten
 des Modells, sodass dessen Pose bestmöglich mit den experimentell erfassten Marker- und gegebenfalls Koordinatendaten übereinstimmt.
@@ -108,11 +116,22 @@ vorgegebenen Werte gesetzt (z.B. fixierte Gelenke).
 Nicht vorgeschriebene Koordinaten werden hingegen durch die IK bestimmt und gehen in das Optimierungsproblem (Least Square) ein.
 Wie bei den Markern können auch den Koordinaten unterschiedliche Gewichte zugewiesen werden, die deren Einfluss auf dei Koordinatenfehler
 bestimmen.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{IK_Rechnung.png}
+    \caption{Least Square Problem der IK (kleinstes Fehlerquadrat)}
+    \label{fig:IK_Rechnung}
+    
+\end{figure}
+In Abbildung 2.2 bezeichnet q den Vektor der zu bestimmenden generalisierten Koordinaten, wobei die Abweichung zwischen den experimentell gemessenen Markerpositionen 
+und den modellbasierten Markerpositionen minimiert wird, 
+während vorgegebene Koordinaten während der inversen Kinematik auf feste Werte gesetzt werden.
+
 
 Die Optimierung ist sensitiv gegenüber der Wahl der Einheiten.
-In der verwendetetn Modellumgebung werden Meter für Längen und Radiant für Winkel verwendet.
+In der verwendeten Modellumgebung werden Meter für Längen und Radiant für Winkel verwendet.
 Dies ist besonders beim Vergleicht mit anderen IK-Verfahren relevant, die Winkel in Grad verarbeiten.
-Um vergleichbare Ergebnisse zu erhalten, müssen die Koordinatengewichte entsprechend an die verwendetetn Winkeleinheiten angepasst werden
+Um vergleichbare Ergebnisse zu erhalten, müssen die Koordinatengewichte entsprechend an die verwendetetn Winkeleinheiten angepasst werden. \cite{opensim_ik}
 
 
 Mit der statischen Optimierung kann das Muskel-Redundanzproblem gelöst werden, basierend auf
