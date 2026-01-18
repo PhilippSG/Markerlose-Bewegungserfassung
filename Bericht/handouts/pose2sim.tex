@@ -1,0 +1,58 @@
+%Einfügen der Header-Dateien
+\input{header/settings.tex}
+
+% Start des Dokuments
+\begin{document}
+\setcounter{chapter}{0}
+\renewcommand{\thesection}{\arabic{section}} % Sections nur arabisch nummerieren
+\newpage
+\begin{center}
+	{\LARGE \textbf{Handout: Pose2Sim-Pipeline}}\\[0.5cm]
+\end{center}
+
+\section{Aufnahme vorbereiten}
+Mindestens zwei Kameras im L-Setup platzieren und so ausrichten, dass die Person von Kopf bis Fuß sichtbar ist. Markieren Sie den Bewegungsbereich, in dem die Person permanent sichtbar bleibt. Jede Bewegung muss von beiden Kameras zumindest zeitweise erfasst werden, damit jede Extremitaet in beiden Perspektiven erscheint.
+
+\begin{itemize}
+	\item \textbf{Sichtbarkeit:} Kein Koerperteil darf laenger ausserhalb des Bildes sein; jede Extremitaet muss in beiden Kameras wenigstens kurz sichtbar sein.
+	\item \textbf{Kamerastand:} Kameras nach der Kalibrierung nicht mehr bewegen. Bereits Millimeter-Verschiebungen entwerten die extrinsische Kalibrierung.
+	\item \textbf{Smartphone-Kameras:} Variable Frame Rate (VFR) abschalten. Tipp: In der Kamera-App 1080p/30fps und "Konstante Bildrate" bzw. "Fixe Framerate" aktivieren; alternativ per Open Camera (Android) oder Pro-Video-Modus (iOS) mit CFR aufnehmen.
+	\item \textbf{Belichtung/Kontrast:} Helle, homogene Beleuchtung; Kleidung mit hohem Kontrast zum Hintergrund; enganliegende Kleidung vermeidet Artefakte.
+	\item \textbf{Synchroner Start:} Kurzer Klatsch oder LED-Blitz zu Beginn erleichtert die Sichtpruefung der Synchronisation.
+\end{itemize}
+
+\section{Kalibrierung}
+\subsection{Checkerboard (allgemein)}
+Ungleiche Seitenlaengen verwenden (rechtwinkliges Rechteck, kein Quadrat). In \texttt{Config.toml} muessen die inneren Ecken eingetragen werden: Bei 9\,x\,7 Feldern sind es [8, 6]; gilt fuer \texttt{intrinsics} und \texttt{extrinsics}.
+
+\subsection{Intrinsische Kalibrierung}
+\begin{itemize}
+	\item Checkerboard auf eine starre, plane Unterlage kleben, damit sich das Muster nicht verzieht.
+	\item Langsam fuehren, Bewegungsunschärfe vermeiden; Ziel: Reprojektionfehler < 0.5 px.
+	\item Genuegend unterschiedliche Perspektiven aufnehmen, aber ohne schnelle Schwenks.
+\end{itemize}
+
+\subsection{Extrinsische Kalibrierung}
+Kurzes, aber kritisches Teilstueck. Das große PVC-Board muss gleichzeitig komplett in allen Kameras sichtbar sein und darf in keiner Kamera diagonal liegen; ideal ist parallel/perpendicular zur Blickrichtung. Manuelle Punktwahl ist sehr unsicher und sollte vermieden werden.
+
+\begin{itemize}
+	\item 2 Sekunden Video genuegen; danach Board entfernen und Szene fuer die eigentliche Aufnahme freiräumen.
+	\item Nach der Berechnung pruefen, ob die Punktnummerierung in allen Perspektiven uebereinstimmt (z.\,B. nordoestlicher Punkt = 1 in allen Kameras, suedwestlicher = 64).
+	\item Wird eine Kamera nach der Extrinsik bewegt (selbst \approx 1 mm), Extrinsik erneut aufnehmen; Intrinsik bleibt gueltig, solange Kamera und Linse unveraendert bleiben.
+\end{itemize}
+
+\section{Haeufige Fehlerquellen}
+\begin{itemize}
+	\item Zu dunkle Szene, geringe Beleuchtung, dunkle Kleidung oder geringer Kontrast.
+	\item Zu schnelle Bewegungen, starke Bewegungsunschärfe.
+	\item PVC-Banner waehrend der Extrinsik diagonal oder nur teilweise sichtbar.
+	\item Manuelle Auswahl der Extrinsik-Punkte; fuehrt oft zu Fehlkalibrierungen.
+	\item Hoher Kalibrierfehler nach Intrinsik/Extrinsik ignoriert.
+	\item Proband verlaesst den Bildausschnitt oder wird von anderen Personen verdeckt; Personen kreuzen sich und verdecken sich gegenseitig.
+	\item Lange, weite Kleidung (Mantel, weites Shirt) verdeckt Gelenke.
+	\item Falsche \texttt{frame\_rate} in \texttt{Config.toml}; bei Unsicherheit auf \texttt{auto} oder exakt auf die Aufnahmefrequenz setzen.
+\end{itemize}
+
+% Fuer Installations- und Versionsdetails siehe Hauptbericht.
+
+\end{document}
