@@ -1,2 +1,31 @@
 \chapter{Schluss}
 \section{Fazit}
+Im Rahmen dieses Projekts wurde untersucht, inwieweit markerlose Bewegungserfassungssysteme zur Rekonstruktion menschlicher Bewegungen 
+und zur Bestimmung von Gelenkwinkeln in der biomechanischen Simulationsumgebung OpenSim eingesetzt werden können. 
+Dabei wurden zwei unterschiedliche Ansätze betrachtet und miteinander verglichen: ein eigenentwickelter Workflow auf Basis eines monokularen
+Pose-Schätzverfahrens sowie eine etablierte Multi-Kamera-Pipeline, die als Referenz diente.
+
+Die Ergebnisse zeigen, dass markerlose Bewegungserfassung grundsätzlich geeignet ist,
+kinematische Bewegungsdaten zu erfassen und diese erfolgreich in OpenSim zu integrieren. 
+Insbesondere konnte demonstriert werden, dass aus videobasierten Poseschätzungen Markerdateien erzeugt werden können, 
+die eine inverse Kinematik und damit die Berechnung von Gelenkwinkeln ermöglichen. Der entwickelte Workflow stellt dabei eine kostengünstige 
+und flexibel einsetzbare Alternative zu klassischen markerbasierten Bewegungserfassungssystemen dar.
+
+Gleichzeitig wurden jedoch auch deutliche Limitationen identifiziert. 
+Insbesondere bei der monokularen 3D-Pose-Schätzung zeigten sich Instabilitäten, vor allem in der Tiefenrichtung, 
+die sich in erhöhten Markerfehlern und starken Schwankungen einzelner Gelenkwinkel äußerten. Diese Effekte traten 
+verstärkt bei Endlagen der Bewegung sowie bei Selbstüberdeckungen auf und schränken die biomechanische Aussagekraft der Ergebnisse ein. 
+Der Vergleich mit der Multi-Kamera-Pipeline verdeutlichte, dass eine präzisere räumliche Rekonstruktion zu stabileren und 
+physikalisch plausibleren Ergebnissen führt.
+
+Darüber hinaus stellte sich die Skalierung der OpenSim-Modelle mit MediaPipe als kritischer Schritt heraus. 
+Durch meherere Versuche mit Ganzkörpermodellen konnte gezeigt werden, dass die Genauigkeit der Gelenkwinkelberechnung
+stark von der Anzahl der verwendeten Marker und der Qualität der Skalierung abhängt.
+Modelle mit einer höheren Anzahl an Markern lieferten unseren Tests nach schlechtere Ergebnisse mit größeren Abweichungen,
+da die Pose-Estimation in diesen Fällen nicht ausreichend genaue Landmarken lieferte und große Probleme bei der Tiefenerkennung auftraten.
+
+Zusammenfassend zeigt das Projekt, dass markerlose Bewegungserfassung in Kombination mit biomechanischen Modellen 
+ein hohes Potenzial für zukünftige Anwendungen besitzt, insbesondere dort, wo flexible, kostengünstige und alltagstaugliche Erfassungssysteme gefragt sind. 
+Für präzise biomechanische Analysen sind jedoch weiterhin robuste 3D-Rekonstruktionsverfahren, eine sorgfältige Modellskalierung sowie eine Validierung der Ergebnisse erforderlich.
+Außerdem wird man niemals eine genauso hohe Genauigkeit bei monokularen Systemen, wie im Vergleich zu Mehrkamerasystemen erreichen können,
+da die Tiefeninformation bei Mehrkamerasystemen durch Triangulierung wesentlich besser bestimmt werden kann.

@@ -42,7 +42,7 @@ Ein zentraler Schwerpunkt der Arbeit liegt auf der Erstellung eines reproduzierb
 vollständige Pipeline der markerlosen Bewegungserfassung beschreibt. Dieses Tutorial umfasst die Installation, Konfiguration
 und Anwendung von MediaPipe sowie von Pose2Sim in Kombination mit OpenSim, beginnend bei der Rohdatenerfassung über die
 Poseschätzung bis hin zur biomechanischen Auswertung. Durch eine schrittweise und systematische Darstellung soll der Einstieg
-für neue Anwender erleichtert und typische Fehlerquellen vermieden werden.
+für neue Anwender erleichtert und typische Fehlerquellen vermieden werden. \cite{review3D_human_pose} \cite{markerless_human_pose_Avogaro} \cite{Accuracy_markerless_motion_capture} \cite{deep_learning_human_pose} 
 
 \section{Was ist OpenSim?}
 OpenSim ist eine kostenlose Open Source Software Plattform für die Modellierung, Simulierung,
@@ -91,7 +91,7 @@ womit eine Grundlage für nachfolgende Analysen geschaffen wird.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{Scaling_bsp.png}
-    \caption{Experimentelle und virtuelle Marker}
+    \caption{Experimentelle und virtuelle Marker  Quelle: \cite{opensim_scale}}
     \label{fig:scaling_bsp}
     
 \end{figure}
@@ -119,10 +119,10 @@ bestimmen.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{IK_Rechnung.png}
-    \caption{Least Square Problem der IK (kleinstes Fehlerquadrat)}
+    \caption{Least Square Problem der IK (kleinstes Fehlerquadrat) Quelle: \cite{opensim_ik}}
     \label{fig:IK_Rechnung}
     
-\end{figure}
+\end{figure} 
 In Abbildung 2.2 bezeichnet q den Vektor der zu bestimmenden generalisierten Koordinaten, wobei die Abweichung zwischen den experimentell gemessenen Markerpositionen 
 und den modellbasierten Markerpositionen minimiert wird, 
 während vorgegebene Koordinaten während der inversen Kinematik auf feste Werte gesetzt werden.
@@ -131,8 +131,14 @@ während vorgegebene Koordinaten während der inversen Kinematik auf feste Werte
 Die Optimierung ist sensitiv gegenüber der Wahl der Einheiten.
 In der verwendeten Modellumgebung werden Meter für Längen und Radiant für Winkel verwendet.
 Dies ist besonders beim Vergleicht mit anderen IK-Verfahren relevant, die Winkel in Grad verarbeiten.
-Um vergleichbare Ergebnisse zu erhalten, müssen die Koordinatengewichte entsprechend an die verwendetetn Winkeleinheiten angepasst werden. \cite{opensim_ik}
+Um vergleichbare Ergebnisse zu erhalten, müssen die Koordinatengewichte entsprechend an die verwendeten Winkeleinheiten angepasst werden. \cite{opensim_ik}
 
+Weitere Tools in OpenSim sind das Inverse Dynamics (ID)-Tool, das Static Optimization (SO)-Tool und das Computed Muscle Control (CMC)-Tool,
+die aber für unser Projekt keine Rolle spielen.
+
+Das Inverse Dynamics (ID)-Tool berechnet die Gelenkmomente, die erforderlich sind, um eine Bewegung auszuführen.
+Dazu werden die generalisierten Koordinaten, deren zeitliche Ableitungen (Geschwindigkeiten und Beschleunigungen) sowie externe Kräfte wie Bodenreaktionskräfte verwendet.
+Die berechneten Gelenkmomente können zur Analyse der mechanischen Belastung von Gelenken und zur Validierung von Muskelmodellen genutzt werden.
 
 Mit der statischen Optimierung kann das Muskel-Redundanzproblem gelöst werden, basierend auf
 etablierten Verfahren aus der wissenschaftlichen Literatur.
