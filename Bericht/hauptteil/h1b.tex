@@ -38,8 +38,10 @@ Diese können wir dann mit den Gelenkwinkeln vom Pose2Sim Ansatz vergleichen.
 Dafür haben wir zwei unterschiedliche OpenSim Modelle  verwendet:
 
 \begin{itemize}
-    \item \texttt{arm\_model}\cite{opensim_arm_model}-- Ein auf dem Standard-Modell arm26\cite{opensim_models} von OpenSim aufbauendes Modell, welches sich nur auf den rechten Arm konzentriert.
-    \item \texttt{Model\_Pose2Sim\_muscles\_flex}\cite{pose2sim_setup} -- Ein Ganzkörper Modell von pose2sim für den besseren Vergleich.
+    \item \texttt{arm\_model} -- Ein auf dem Standard-Modell arm26 \cite{opensim_models} von OpenSim aufbauendes Modell,
+    welches sich nur auf den rechten Arm konzentriert. Das Modell befindet sich im GitHub-Repository \cite{github_repository}
+    unter OpenSim/models/arm\_model.osim.
+    \item \texttt{Model\_Pose2Sim\_muscles\_flex} \cite{pose2sim_setup} -- Ein Ganzkörper Modell von pose2sim für den besseren Vergleich.
 \end{itemize}
 \begin{figure}[ht]
     \centering
@@ -315,7 +317,7 @@ in zwei Kategorien.
     \item Dynamisch:
     Die Person im Video hat eine Bewegung ausgeführt.
 \end{itemize}
-Die Statische Marker Datei ist vorallem für das Scale Tool von OpenSim wichtig.\cite{opensim_scale}
+Die Statische Marker Datei ist vorallem für das Scale Tool von OpenSim wichtig \cite{opensim_scale}.
 Damit haben wir jedoch wenig Erfolg gehabt, da wir zu wenig Marker hatten um unser Modell korrekt zu skalieren.
 Das könnte ein weiterer Ansatzpunkt für zukünftige Arbeiten sein.
 
@@ -327,15 +329,19 @@ Bewegungsdatei zu bekommen welche die Gelenkwinkel des Modells, zu unterschiedli
 \subsection{Genauigkeit der 3D-Pose-Schätzung von MediaPipe}
 Da dies ein monokularer Ansatz ist, sind die 3D Positionen von MediaPipe BlazePose
 nicht so genau wie bei einem Mehrkamerasystem. Um die Genauigkeit zu überprüfen, haben wir ein
-Beispielvideo\cite{mp_video_comp} (Video von cam1) verwendet. Im Video ist eine nahezu perfekte 2D Bewegung in der sichtbaren x-y-Ebene zu sehen, um die Stabilität der
-3D Pose Schätzung zu testen. 
+Beispielvideo (GitHub-Repository \cite{github_repository} unter
+\href{https://github.com/PhilippSG/Markerlose-Bewegungserfassung/blob/main/Videos/MP_2d3d_comp/dynamic.mp4}{Videos/MP\_2d3d\_comp/dynamic.mp4})
+verwendet. Im Video ist eine nahezu perfekte 2D Bewegung in der sichtbaren x-y-Ebene zu sehen, um die Stabilität der
+3D Pose Schätzung zu testen.
 
 Zunächst haben wir das Video mit MediaPipe analysiert,
 um die 3D Positionen der Keypoints zu extrahieren. Anschließend haben wir den Prozess wiederholt,
 aber diesmal die Z-Koordinaten aller Keypoints auf Null gesetzt, um eine 2D-Analyse zu simulieren.
 Danach haben wir die Ergebnisse in OpenSim importiert um sie zu betrachten.
 
-Im Ergebnisvideo\cite{mp_2d3d_video}, so wie in der Abbildung~\ref{fig:2d-3d-vergleich}, ist deutlich zu erkennen, dass die 3D-Analyse von MediaPipe
+Im Ergebnisvideo (GitHub-Repository \cite{github_repository} unter
+\href{https://github.com/PhilippSG/Markerlose-Bewegungserfassung/tree/main/Videos/MP_2d3d_comp/Comparison_result.mp4}{\url{Videos/MP\_2d3d\_comp/Comparison\_result.mp4}}),
+so wie in der Abbildung~\ref{fig:2d-3d-vergleich}, ist deutlich zu erkennen, dass die 3D-Analyse von MediaPipe
 zu erheblichen Schwankungen in der Z-Achse führt, obwohl die Bewegung nahezu ausschließlich in der x-y-Ebene auf der Höhe der Schulter stattfindet.
 
 \begin{figure}[ht]
