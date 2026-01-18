@@ -153,6 +153,31 @@ Der Prozess läuft wie folgt ab:
 
 Die Ausführung erfolgt automatisiert über das CLI-Tool mit dem Flag \texttt{-p}. Das Resultat ist eine Sammlung von unabhängigen 2D-Skelettmodellen aus verschiedenen Perspektiven, die noch keine räumliche Tiefe besitzen.
 
+\begin{figure}[ht]
+    \centering
+    % Bild links
+    \begin{subfigure}[t]{0.5\textwidth}
+        \centering
+        % 
+        % 
+        \includegraphics[width=\linewidth, height=5cm, keepaspectratio]{Handshake.png}
+        \caption{2D-Pose-Erkennung (RTMPose)}
+        \label{fig:handshake_2d}
+    \end{subfigure}
+    \hfill % 
+    % Bild rechts--
+    \begin{subfigure}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth, height=5cm, keepaspectratio]{handshake opensim.png} 
+        \caption{OpenSim-Modell (Inverse Kinematik)}
+        \label{fig:handshake_opensim}
+    \end{subfigure}
+    
+    \caption{\textbf{Von 2D zu 3D:} Visualisierung einer komplexen Interaktion (Händeschütteln). Links ist die robuste Detektion der Keypoints durch RTMPose zu sehen. Rechts das daraus generierte, muskuloskelettale OpenSim-Modell, das die Bewegung räumlich korrekt wiedergibt.}
+    \label{fig:handshake_comparison}
+\end{figure}
+
+
 \subsubsection{Triangulierung}
 Der zentrale Schritt der Pipeline ist die Überführung der planaren 2D-Daten in ein räumliches 3D-Modell. Dies geschieht durch das mathematische Verfahren der \textbf{Triangulierung}.
 
