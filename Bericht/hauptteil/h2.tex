@@ -40,18 +40,18 @@ Der vollständige Quellcode, inklusive des \texttt{pose2sim\_cli.py}-Skripts sow
 Für eine fehlerfreie Datenverarbeitung ist die Einhaltung einer spezifischen Ordnerstruktur zwingend erforderlich. Dies bildet die Grundlage dafür, dass sowohl die Standard-Funktionen von \textbf{Pose2Sim} als auch die Automatisierung durch das \textbf{CLI-Skript} korrekt funktionieren können.
 
 Das Projektverzeichnis muss wie folgt organisiert sein:
-\begin{verbatim}
-Projekt_Verzeichnis/
-├── calibration/
-│   ├── intrinsics/
-│   │   ├── cam01/
-│   │   └── cam02/
-│   └── extrinsics/
-│       ├── cam01/
-│       └── cam02/
-├── videos/            (Enthält die Rohvideos der Bewegung)
-├── Config.toml        (Zentrale Konfigurationsdatei)
-└── pose2sim_cli.py    (Skript für Rotation und Automatisierung)
+\begin{verbatim}  
+    Projekt_Verzeichnis/
+    |-- calibration/
+    |   |-- intrinsics/
+    |   |   |-- cam01/
+    |   |   `-- cam02/
+    |   `-- extrinsics/
+    |       |-- cam01/
+    |       `-- cam02/
+    |-- videos/         (Enthält die Rohvideos der Bewegung)
+    |-- Config.toml     (Zentrale Konfigurationsdatei)
+    `-- pose2sim_cli.py (Skript für Rotation und Automatisierung)
 \end{verbatim}
 Diese Struktur stellt sicher, dass Pose2Sim die Kalibrierungsdaten (in den Unterordnern \texttt{intrinsics} und \texttt{extrinsics}) eindeutig den Videodaten zuordnen kann. Gleichzeitig ermöglicht sie dem CLI-Tool, alle Schritte im Batch-Verfahren auszuführen.
 
@@ -87,22 +87,21 @@ Die Berechnung erfolgt automatisiert durch Pose2Sim (bzw. das CLI-Tool mit dem F
 
 \textbf{Wichtig:} Damit der Algorithmus den korrekten metrischen Maßstab (Skalierung) berechnen kann, ist es entscheidend, die \textbf{Kantenlänge der Schachbrett-Quadrate} in der \texttt{Config.toml} einzutragen.
 
-\begin{figure}[ht]
+\begin{figure}[H]
     \centering
-    \begin{subfigure}[b]{0.48\textwidth}
+    \begin{subfigure}[b]{0.41\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{Bericht/img/Kamera_Setup.jpeg}
+        \includegraphics[width=\textwidth]{Kamera_Setup.jpeg}
         \caption{Kamera-Setup mit Schachbrett}
         \label{fig:setup_visuell}
     \end{subfigure}
     \hfill 
-    \begin{subfigure}[b]{0.48\textwidth}
+    \begin{subfigure}[b]{0.55\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{Bericht/img/Cali_intrinsics.png}
+        \includegraphics[width=\textwidth]{Cali_intrinsics.png}
         \caption{Intrinsische Kalibrierung}
         \label{fig:cali_visuell}
     \end{subfigure}
-    
     \caption{Visualisierung der Kalibrierung. Links: Exemplarischer Aufbau des Kamera-Setups. Rechts: Darstellung der berechneten intrinsischen Parameter.}
     \label{fig:kalibrierung_visuell}
 \end{figure}
