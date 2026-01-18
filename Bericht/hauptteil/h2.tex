@@ -291,21 +291,3 @@ Die Qualität der Ergebnisse wird primär durch drei Faktoren bestimmt:
     \item \textbf{Foot Sliding:} Da keine Kraftmessplatten verwendet werden, neigen die Füße im Modell zu leichtem Rutschen auf dem Boden.
     \item \textbf{Bewegungsunschärfe:} Sehr schnelle Bewegungen führen zu ungenauen Keypoints und erfordern stärkere Filterung.
 \end{itemize}
-
-\subsection{Fazit und Ausblick}
-
-Diese Arbeit hat gezeigt, dass die Kombination aus Pose2Sim und OpenSim eine funktionale und kostengünstige Pipeline für die 3D-Bewegungsanalyse darstellt.
-Es gelang, aus reinen 2D-Videoaufnahmen valide kinematische Daten zu extrahieren und in ein biomechanisches Modell zu überführen, ohne auf teures Marker-Equipment angewiesen zu sein.
-
-\textbf{Zusammenfassende Bewertung:}
-\begin{itemize}
-    \item \textbf{Machbarkeit:} Der Workflow ist stabil und für den Einsatz im Heim- oder Amateursportbereich geeignet.
-    \item \textbf{Qualität:} Durch gezielte Filterung und das \texttt{body\_with\_feet}-Modell konnten physiologisch plausible Gelenkwinkel berechnet werden.
-    \item \textbf{Einschränkungen:} Die Abhängigkeit von optimalen Lichtverhältnissen und eng anliegender Kleidung bleibt die größte Hürde für den Praxiseinsatz.
-\end{itemize}
-
-\textbf{Ausblick:}
-Für zukünftige Arbeiten wäre eine quantitative Validierung gegen ein Gold-Standard-System (z.\,B. Vicon) empfehlenswert, um die absolute Messgenauigkeit zu bestimmen. Zudem könnten neuere Pose-Estimation-Modelle (wie RTMPose-Large) die Robustheit gegenüber Verdeckungen weiter verbessern.
-
-
-
