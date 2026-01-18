@@ -8,8 +8,9 @@ die Pose2Sim-Pipeline als Referenz herangezogen, da dort keine eigentliche
 Multikamera-Setup mittels Triangulierung präziser bestimmt werden können.
 
 Um einen angemessenen Vergleich der beiden Ansätze durchführen zu können,
-haben wir uns entschieden, ein identisches
-OpenSim-Modell\cite{opensim_arm_model} zu verwenden.
+haben wir uns entschieden, ein identisches OpenSim-Modell zu verwenden.
+Verwendet wurde hier das bereits erwähnte arm\_model.osim, befindlich
+im GitHub-Repository \cite{github_repository}.
 Dafür mussten wir jedoch frühzeitig in die Pose2Sim-Pipeline eingreifen
 und die bis dahin erstellte .trc-Datei extrahieren, da im nächsten Schritt
 das pipelineeigene Modell erstellt worden wäre.
@@ -32,10 +33,10 @@ Um die Markerfehler in einen Kontext setzen zu können, wurden zudem noch
 die von OpenSim erstellten .mot-Dateien extrahiert, die die resultierenden
 Gelenkwinkel beinhalten.
 
-Die verwendeten Dateien\cite{mp_p2s_files_comp}, die
-Originalvideos sowie ein Ergebnisvideo\cite{mp_p2s_video_comp},
+Die verwendeten Dateien, die Originalvideos sowie ein Ergebnisvideo,
 welches die Eingabevideos gemeinsam mit dem entsprechenden
-OpenSim-Ergebnis darstellt sind im GitHub-Repository wiederzufinden.
+OpenSim-Ergebnis darstellt, sind im GitHub-Repository \cite{github_repository}
+unter \url{Vergleich_MP-P2S/} wiederzufinden.
 
 Zuerst betrachten wir die aus der inversen Kinematik resultierenden Markerfehler. Diese geben an,
 wie nah die Modell-Marker an die Marker der extrahierten Daten angepasst werden
@@ -49,9 +50,13 @@ konnten.
 
 In Abbildung~\ref{fig:marker_error_RMS} ist gut zu erkennen, dass die Markerfehler
 aus den MediaPipe Daten teils sehr nah an denen von Pose2Sim liegen. Interessant ist,
-dass die MediaPipe Markerfehler immer dann ansteigen, wenn die Pose2Sim Fehler leicht
-sinken. Die Zeitpunkte entsprechen in den Videos den Momenten, wenn die Hand am höchsten
-Punkt ankommt, kurz ruht und anschließend wieder gesenkt wird.
+dass die MediaPipe Markerfehler immer dann ansteigen, wenn die Hand im Video
+in die obere Endlage gelangt. Dieses Verhalten lässt sich darauf zurückführen,
+dass MediaPipe in dieser Phase durch die stärkere Selbstüberdeckung sowie die
+geringe Bewegungsdynamik der Marker eine erhöhte Instabilität der
+3D-Rekonstruktion aufweist \cite{Rode2025}. Pose2Sim hingegen liefert hier leicht geringere Markerfehler,
+da das Multikamera-Setup eine robustere 3D-Triangulierung ermöglicht und Selbstüberdeckungen
+einzelner Marker besser kompensiert werden können.
 
 \begin{figure}[htbp]
     \centering
@@ -92,8 +97,8 @@ Erkennung besser in einer langsamen Bewegung funktioniert, da hier vermutlich di
 Bewegungsrichtung und -geschwindigkeit berücksichtigt werden können.
 
 Die größten Abweichungen zeigen sich jedoch, wie zu erwarten, in der 3D Schätzung.
-Besonders deutlich wird dies anhand des Winkels r\_shoulder\_side,
+Besonders deutlich wird dies anhand des Winkels \texttt{r\_shoulder\_side},
 der maßgeblich für die Bewegung in z-Richtung ist.
-Während MediaPipe hier starke Schwankungen zeigt – insbesondere erneut in der oberen
-Endlage – bleibt der entsprechende Winkel bei Pose2Sim über das gesamte Video
+Während MediaPipe hier starke Schwankungen zeigt -- insbesondere erneut in der oberen
+Endlage -- bleibt der entsprechende Winkel bei Pose2Sim über das gesamte Video
 hinweg nahezu konstant.
