@@ -40,7 +40,7 @@ Dafür haben wir zwei unterschiedliche OpenSim Modelle  verwendet:
 \begin{itemize}
     \item \texttt{arm\_model} -- Ein auf dem Standard-Modell arm26 \cite{opensim_models} von OpenSim aufbauendes Modell,
     welches sich nur auf den rechten Arm konzentriert. Das Modell befindet sich im GitHub-Repository \cite{github_repository}
-    unter OpenSim/models/arm\_model.osim.
+    unter \url{OpenSim/models/arm\_model.osim}.
     \item \texttt{Model\_Pose2Sim\_muscles\_flex} \cite{pose2sim_setup} -- Ein Ganzkörper Modell von pose2sim für den besseren Vergleich.
 \end{itemize}
 \begin{figure}[ht]
@@ -329,8 +329,7 @@ Bewegungsdatei zu bekommen welche die Gelenkwinkel des Modells, zu unterschiedli
 \subsection{Genauigkeit der 3D-Pose-Schätzung von MediaPipe}
 Da dies ein monokularer Ansatz ist, sind die 3D Positionen von MediaPipe BlazePose
 nicht so genau wie bei einem Mehrkamerasystem. Um die Genauigkeit zu überprüfen, haben wir ein
-Beispielvideo (GitHub-Repository \cite{github_repository} unter
-\href{https://github.com/PhilippSG/Markerlose-Bewegungserfassung/blob/main/Videos/MP_2d3d_comp/dynamic.mp4}{Videos/MP\_2d3d\_comp/dynamic.mp4})
+Beispielvideo (GitHub-Repository \cite{github_repository} unter \url{MediaPipe/Vergleich\_2D-3D/dynamic.mp4})
 verwendet. Im Video ist eine nahezu perfekte 2D Bewegung in der sichtbaren x-y-Ebene zu sehen, um die Stabilität der
 3D Pose Schätzung zu testen.
 
@@ -339,8 +338,7 @@ um die 3D Positionen der Keypoints zu extrahieren. Anschließend haben wir den P
 aber diesmal die Z-Koordinaten aller Keypoints auf Null gesetzt, um eine 2D-Analyse zu simulieren.
 Danach haben wir die Ergebnisse in OpenSim importiert um sie zu betrachten.
 
-Im Ergebnisvideo (GitHub-Repository \cite{github_repository} unter
-\href{https://github.com/PhilippSG/Markerlose-Bewegungserfassung/tree/main/Videos/MP_2d3d_comp/Comparison_result.mp4}{\url{Videos/MP\_2d3d\_comp/Comparison\_result.mp4}}),
+Im Ergebnisvideo (GitHub-Repository \cite{github_repository} unter \url{MediaPipe/Vergleich\_2D-3D/MP_Comp_2D-3D.mp4}),
 so wie in der Abbildung~\ref{fig:2d-3d-vergleich}, ist deutlich zu erkennen, dass die 3D-Analyse von MediaPipe
 zu erheblichen Schwankungen in der Z-Achse führt, obwohl die Bewegung nahezu ausschließlich in der x-y-Ebene auf der Höhe der Schulter stattfindet.
 
