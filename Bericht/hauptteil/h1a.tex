@@ -81,7 +81,7 @@ Die Markerpositionen werden in der Regel mit den in der Einleitung genannten Mot
 Das unskalierte Modell enthält korrespondierende virtuelle Marker, die an denselben anatomischen Landmarken
 wie die experimentellen Marker positioniert sind.
 Während des Skalierungsprozesses werden die Abmessungen der einzelnen Körpersegmente so angepasst, dass
-die Abstände zwischen den virtuellen Markern (Modell Marker) und den gemessenen Abständen der experimentellen Markern entsprechen.
+die Abstände zwischen den virtuellen Markern (Modell Marker), den gemessenen Abständen der experimentellen Markern entsprechen.
 Ergänzend oder alternativ dazu können zu der markerbasierten Skalierung auch manuell definierte Skalierungsfaktoren
 für einzelne Körpersegmente verwendet werden, die beispielsweise aus unabhängigen anthropometrischen Messungen stammen.
 Nach Abschluss der Skalierung ermöglicht das Scale-Tool zudem, ausgewählte oder alle virtuellen Marker gezielt
@@ -97,16 +97,16 @@ womit eine Grundlage für nachfolgende Analysen geschaffen wird.
 \end{figure}
 In der Abbildung \ref{fig:scaling_bsp} in Blau sind die experimentellen Marker dargestellt, in Pink die virtuellen Modellmarker nach der Skalierung. \cite{opensim_scale}
 
-Die Inverse Kinematic (IK) Tool berechnet für jeden Zeitschritt (frame) der einer Bewegung die generalisierten Koordinaten
+Das Inverse Kinematic (IK) Tool berechnet für jeden Zeitschritt (frame) einer Bewegung die generalisierten Koordinaten
 des Modells, sodass dessen Pose bestmöglich mit den experimentell erfassten Marker- und gegebenfalls Koordinatendaten übereinstimmt.
 Die beste Übereinstimmung wird mathematisch als ein gewichtetes Least Square Problem (kleinstes Fehlerquadrat) formuliert, bei dem sowohl Marker als auch
 Koordinatenfehler minimiert werden.
-(Bild der Rechnung)
+
 Die Markerfehler die dabei entstehen sind definiert als der euklidische Abstand zwischen der Position eines experimentell bestimmten Markers
 und der entsprechenden Markerposition am virtuellen Modell, nachdem dieses durch die berechnete generalisierte Koordinaten positioniert wurde.
 Wie bereits erwähnt, ist jedem Marker ein Gewicht zugeordnet, das bestimmt, wie stark dessen Abweichung in die Gesamtfehlerfunktion eingeht.
 Analog dazu werden auch Koordinatenfehler definiert, die die Differenz zwischen einem experimentell vorgegebenen Koordinatenwert, beispielsweise 
-einem Gelenkwinkel, und dem durch die IK berechneten Wert beschreiben.
+einem Gelenkwinkel und dem durch die IK berechneten Wert beschreiben.
 Außerdem können die Experimentellen Koordinaten, die wiederum aus den Motion Capture Systemen, speziellen Auswertealgorithmen oder zusätzlichen
 Messgeräten wie Goniometern stammen, alternativ auch mit festen Sollwerten vorgegeben werden.
 Feste Sollwerte sind insbesondere dann sinnvoll, wenn bestimmte Gelenkwinkel konstant bleiben sollen.
