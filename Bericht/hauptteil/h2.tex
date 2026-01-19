@@ -118,14 +118,15 @@ Die wichtigsten Anpassungen, gegliedert nach den Sektionen der Konfigurationsdat
 \begin{itemize}
     \item \texttt{multi\_person}: Dieser Parameter wurde dauerhaft auf \texttt{true} gesetzt. Dies deckt sowohl Einzel- als auch Mehrpersonenaufnahmen ab und vermeidet Konfigurationsfehler.
     \item \texttt{frame\_rate}: Kann auf \texttt{'auto'} belassen werden, da Pose2Sim die Bildwiederholrate der Videos zuverlässig aus den Metadaten ausliest.
-    \item \texttt{frame\_range}: Es wird empfohlen, den Bereich manuell zu definieren oder alle Frames zu verarbeiten. Die Einstellung \texttt{'auto'} (automatische Erkennung, wann eine Person das Bild betritt) erwies sich in Tests als fehleranfällig.
+    \item \texttt{frame\_range}: Dieser Parameter wurde explizit auf \texttt{'all'} gesetzt. 
+    \textit{Begründung:} Zwar bietet die Einstellung \texttt{'auto'} theoretisch die Möglichkeit, den Eintrittszeitpunkt von Personen automatisch zu erkennen, in unseren praktischen Versuchen erwies sich diese Funktion jedoch als unzuverlässig. Um sicherzustellen, dass keine relevanten Daten verloren gehen und die gesamte Sequenz simuliert wird, wurde daher die Verarbeitung aller Frames erzwungen.
 \end{itemize}
 
 \paragraph{[pose]}
 \begin{itemize}
     \item \texttt{pose\_model}: Als Modell wurde \texttt{RTMPose} (in der Variante \texttt{body\_with\_feet}) gewählt. 
     \textit{Hinweis zur Modellwahl:} In Voruntersuchungen wurde auch das Framework \textbf{MediaPipe} evaluiert. Dieses lieferte jedoch signifikant ungenauere Ergebnisse bei der 3D-Triangulierung, da die Konsistenz der Keypoints zwischen den Kameraperspektiven unzureichend war. Daher wurde es zugunsten von RTMPose verworfen.
-
+    
     \item \texttt{mode}: Die Einstellung \texttt{'performance'} bietet den besten Kompromiss aus Genauigkeit und Rechengeschwindigkeit.
 
     \item \texttt{tracking\_mode}: Für das Verfolgen der Personen über die Frames hinweg lieferte der Modus \texttt{'sport2d'} deutlich robustere Ergebnisse als der \texttt{'deepsort'}-Algorithmus.
@@ -137,11 +138,14 @@ Die wichtigsten Anpassungen, gegliedert nach den Sektionen der Konfigurationsdat
     \textit{Hinweis:} Bei manuellen, unsynchronisierten Aufnahmen müsste dieser Wert aktiviert werden, um die Videos nachträglich anhand eines visuellen Signals (z.\,B. Klatschen) anzugleichen.
 \end{itemize}
 
-\paragraph{[calibration]}
+\paragraph{{[calibration]}} 
 \begin{itemize}
     \item \texttt{type}: Standardmäßig auf \texttt{'calculate'} gesetzt.
-    \item \texttt{method}: Es wird die Methode \texttt{'board'} (Schachbrett) verwendet. Die Alternative \texttt{'scene'} (Nutzung statischer Hintergrundpunkte) ist mathematisch komplexer und lieferte unzuverlässigere Ergebnisse.
-    \item \textbf{Physikalische Parameter:} Entscheidend sind die korrekte Angabe der \texttt{checkerboard\_square\_size} (z.\,B. 0.03\,m) und der \texttt{corners\_nb} (Anzahl innerer Ecken), da diese als metrische Referenz für die 3D-Umrechnung dienen.
+    
+    \item \texttt{method}: Es wird die Methode \texttt{'board'} (Schachbrett) verwendet. Die Alternative \texttt{'scene'} (Nutzung statischer Hintergrundpunkte) ist mathematisch komplexer und lieferte in unseren Tests weniger zuverlässige Ergebnisse.
+    
+    \item \textbf{Physikalische Parameter:} Entscheidend sind die korrekte Angabe der \texttt{checkerboard\_\-square\_\-size} (z.\,B. 20\,mm) und der \texttt{corners\_\-nb} (Anzahl innerer Ecken), da diese als metrische Referenz für die 3D-Umrechnung dienen.
+    
     \item \textit{Effizienz:} Die Berechnung der intrinsischen Parameter muss theoretisch nur einmalig erfolgen, solange die Objektiveinstellungen (Fokus/Zoom) der Kameras unverändert bleiben.
 \end{itemize}
 
@@ -199,7 +203,7 @@ Dabei werden die 2D-Informationen aus den verschiedenen Kameraperspektiven unter
 Ein entscheidender Vorteil von Pose2Sim ist die gewichtete Triangulierung. Der Algorithmus berücksichtigt den in der vorherigen Stufe ermittelten \textbf{Konfidenzwert} (Likelihood).
 \begin{itemize}
     \item Punkte mit hoher Erkennungswahrscheinlichkeit gehen stärker in die Berechnung ein.
-    \item Punkte unterhalb des in der \texttt{Config.toml} definierten Schwellenwerts (\texttt{likelihood\_threshold}) werden ignoriert, um Ausreißer zu minimieren.
+    \item Punkte unterhalb des in der \texttt{Config.toml} definierten Schwellenwerts (\texttt{likelihood\_\-threshold}) werden ignoriert, um Ausreißer zu minimieren.
 \end{itemize}
 
 Dieser Schritt wird über das CLI-Tool mit dem Flag \texttt{-t} ausgeführt. Das Ergebnis ist eine Punktwolke (Point Cloud) der Gelenke im metrischen Raum ($x, y, z$ in Metern).
@@ -352,7 +356,7 @@ Die Evaluation der Pipeline identifizierte folgende Parameter als qualitätsbest
     \label{fig:error_dark}
 \end{figure}
     \item \textbf{Okklusion (Verdeckung):} 
-    Neben statischen Objekten (z.\,B. Rollstuhl) stellen insbesondere *dynamische Überlappungen* eine Fehlerquelle dar. Bei Multi-Personen-Aufnahmen ist eine strikte räumliche Trennung der Akteure zwingend erforderlich. Kreuzen sich die Laufwege der Personen (Crossing), kann der Algorithmus die Gelenke nicht mehr eindeutig zuordnen (Identity Switch), was zum Zusammenbruch der Simulation führt.
+    Neben statischen Objekten (z.\,B. Bürostuhl) stellen insbesondere dynamische Überlappungen eine Fehlerquelle dar. Bei Multi-Personen-Aufnahmen ist eine strikte räumliche Trennung der Akteure zwingend erforderlich. Kreuzen sich die Laufwege der Personen (Crossing), kann der Algorithmus die Gelenke nicht mehr eindeutig zuordnen (Identity Switch), was zum Zusammenbruch der Simulation führt.
 
 \begin{figure}[H]
     \centering
