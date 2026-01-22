@@ -54,7 +54,7 @@ pose_model = 'Body_with_feet'  #With RTMLib:
                          #With alphapose: HALPE_26, HALPE_68, HALPE_136, COCO_133
                          #With deeplabcut: CUSTOM. See example at the end of the file
 
-mode = 'performance' # 'lightweight', 'balanced', 'performance', 
+mode = 'balanced' # 'lightweight', 'balanced', 'performance', 
                   # or """{dictionary}""" (see below)
 # A dictionary (WITHIN THREE DOUBLE QUOTES) allows you to manually select the person detection (if top_down approach) and/or pose estimation models (see https://github.com/Tau-J/rtmlib). 
 # Models can be local paths or URLs.
@@ -98,7 +98,7 @@ output_format = 'openpose' # 'openpose', 'mmpose', 'deeplabcut', 'none' or a lis
 
 
 [synchronization]
-synchronization_gui = true # true or false. If true, a player will popup and let the user determine synchronization parameters. If false, it will be done automatically based on the parameters below
+synchronization_gui = false # true or false. If true, a player will popup and let the user determine synchronization parameters. If false, it will be done automatically based on the parameters below
 display_sync_plots = true # true or false (lowercase)
 save_sync_plots = true # true or false (lowercase) # save synchronization plots
 keypoints_to_consider = 'all' # 'all' if all points should be considered, for example if the participant did not perform any particicular sharp movement. In this case, the capture needs to be 5-10 seconds long at least
