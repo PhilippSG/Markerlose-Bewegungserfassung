@@ -1,0 +1,8 @@
+# Hide TeX documentation from language statistics
+*.tex linguist-documentation
+*.aux linguist-generated
+*.fls linguist-generated
+*.fdb_latexmk linguist-generated
+*.toc linguist-generated
+*.blg linguist-generated
+*.bbl linguist-generated
