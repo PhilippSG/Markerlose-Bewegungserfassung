@@ -104,7 +104,7 @@ Siehe die individuellen `requirements.txt`-Dateien der Komponenten für spezifis
 
 ## Kontakt & Zuschreibung
 
-Dieses Projekt ist Teil eines Praktikumsstudiums an der **FH Aachen** (5. Semester Praktika).
+Dieses Projekt ist Teil eines interdesziplinären Projekts an der **FH Aachen** (5. Semester Praktika).
 
 ---
 
